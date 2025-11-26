@@ -1,0 +1,1000 @@
+[{
+  "_id": {
+    "$oid": "692713faf0af45050619a3f1"
+  },
+  "id": 1,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad heter Sveriges huvudstad?",
+  "options": [
+    "Göteborg",
+    "Stockholm",
+    "Malmö",
+    "Uppsala"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3f2"
+  },
+  "id": 2,
+  "category": null,
+  "difficulty": null,
+  "text": "Hur många ben har en spindel?",
+  "options": [
+    "6",
+    "8",
+    "10",
+    "12"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3f3"
+  },
+  "id": 3,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilken färg får man om man blandar blått och gult?",
+  "options": [
+    "Orange",
+    "Brunt",
+    "Grönt",
+    "Lila"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3f4"
+  },
+  "id": 4,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket år startade andra världskriget?",
+  "options": [
+    "1935",
+    "1939",
+    "1941",
+    "1945"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3f5"
+  },
+  "id": 5,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket djur är störst i världen?",
+  "options": [
+    "Afrikansk elefant",
+    "Blåval",
+    "Kaskelot",
+    "Flodhäst"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3f6"
+  },
+  "id": 6,
+  "category": null,
+  "difficulty": null,
+  "text": "Hur många dagar finns det i en vecka?",
+  "options": [
+    "5",
+    "6",
+    "7",
+    "8"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3f7"
+  },
+  "id": 7,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket ämne andas människor in för att överleva?",
+  "options": [
+    "Koldioxid",
+    "Syre",
+    "Kväve",
+    "Väte"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3f8"
+  },
+  "id": 8,
+  "category": null,
+  "difficulty": null,
+  "text": "Hur många hjul har en vanlig bil?",
+  "options": [
+    "2",
+    "3",
+    "4",
+    "5"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3f9"
+  },
+  "id": 9,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad är 5 + 7?",
+  "options": [
+    "10",
+    "11",
+    "12",
+    "13"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3fa"
+  },
+  "id": 10,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad heter vår planet?",
+  "options": [
+    "Mars",
+    "Venus",
+    "Jorden",
+    "Saturnus"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3fb"
+  },
+  "id": 11,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket djur säger 'mjau'?",
+  "options": [
+    "Hund",
+    "Katt",
+    "Ko",
+    "Får"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3fc"
+  },
+  "id": 12,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilken planet är närmast solen?",
+  "options": [
+    "Venus",
+    "Jorden",
+    "Merkurius",
+    "Mars"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3fd"
+  },
+  "id": 13,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket instrument har tangenter?",
+  "options": [
+    "Fiol",
+    "Piano",
+    "Trumpet",
+    "Gitarr"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3fe"
+  },
+  "id": 14,
+  "category": null,
+  "difficulty": null,
+  "text": "Hur många minuter finns i en timme?",
+  "options": [
+    "30",
+    "45",
+    "60",
+    "90"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a3ff"
+  },
+  "id": 15,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad heter Sveriges största sjö?",
+  "options": [
+    "Vättern",
+    "Mälaren",
+    "Vänern",
+    "Hjälmaren"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a400"
+  },
+  "id": 16,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilken månad kommer efter juni?",
+  "options": [
+    "Maj",
+    "Juli",
+    "Augusti",
+    "September"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a401"
+  },
+  "id": 17,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad heter det när vatten blir till is?",
+  "options": [
+    "Avdunstning",
+    "Kondensering",
+    "Frysning",
+    "Smältning"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a402"
+  },
+  "id": 18,
+  "category": null,
+  "difficulty": null,
+  "text": "Hur många centimeter är en meter?",
+  "options": [
+    "50",
+    "75",
+    "100",
+    "120"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a403"
+  },
+  "id": 19,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad kallas en unge till en ko?",
+  "options": [
+    "Föl",
+    "Kalv",
+    "Kid",
+    "Killing"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a404"
+  },
+  "id": 20,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket djur kan flyga?",
+  "options": [
+    "Häst",
+    "Hund",
+    "Fågel",
+    "Ko"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a405"
+  },
+  "id": 21,
+  "category": null,
+  "difficulty": null,
+  "text": "Hur många år går det på ett decennium?",
+  "options": [
+    "5",
+    "10",
+    "15",
+    "20"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a406"
+  },
+  "id": 22,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilken form har hjul?",
+  "options": [
+    "Rektangel",
+    "Triangel",
+    "Cirkel",
+    "Kvadrat"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a407"
+  },
+  "id": 23,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket land ligger söder om Sverige?",
+  "options": [
+    "Norge",
+    "Danmark",
+    "Finland",
+    "Island"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a408"
+  },
+  "id": 24,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilken gas används i ballonger för att flyga?",
+  "options": [
+    "Syre",
+    "Helium",
+    "Koldioxid",
+    "Kväve"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a409"
+  },
+  "id": 25,
+  "category": null,
+  "difficulty": null,
+  "text": "Hur många hörn har en triangel?",
+  "options": [
+    "2",
+    "3",
+    "4",
+    "5"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a40a"
+  },
+  "id": 26,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilken metall är känd för att vara magnetisk?",
+  "options": [
+    "Koppar",
+    "Guld",
+    "Järn",
+    "Silver"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a40b"
+  },
+  "id": 27,
+  "category": null,
+  "difficulty": null,
+  "text": "Hur många planeter har vårt solsystem?",
+  "options": [
+    "7",
+    "8",
+    "9",
+    "10"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a40c"
+  },
+  "id": 28,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad heter den största kontinenten?",
+  "options": [
+    "Europa",
+    "Asien",
+    "Afrika",
+    "Nordamerika"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a40d"
+  },
+  "id": 29,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket djur ger oss mjölk?",
+  "options": [
+    "Ko",
+    "Gris",
+    "Häst",
+    "Får"
+  ],
+  "correctIndex": 0,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a40e"
+  },
+  "id": 30,
+  "category": null,
+  "difficulty": null,
+  "text": "Hur många sekunder går det på en minut?",
+  "options": [
+    "30",
+    "45",
+    "50",
+    "60"
+  ],
+  "correctIndex": 3,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a40f"
+  },
+  "id": 31,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad heter jordens största hav?",
+  "options": [
+    "Atlanten",
+    "Indiska oceanen",
+    "Stilla havet",
+    "Arktiska havet"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a410"
+  },
+  "id": 32,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad blir 9 × 3?",
+  "options": [
+    "18",
+    "21",
+    "24",
+    "27"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a411"
+  },
+  "id": 33,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket land kommer pizzan ifrån?",
+  "options": [
+    "Frankrike",
+    "Spanien",
+    "Italien",
+    "Grekland"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a412"
+  },
+  "id": 34,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad heter den största planeten i solsystemet?",
+  "options": [
+    "Jorden",
+    "Jupiter",
+    "Saturnus",
+    "Neptunus"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a413"
+  },
+  "id": 35,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket språk talas i Brasilien?",
+  "options": [
+    "Spanska",
+    "Portugisiska",
+    "Franska",
+    "Italienska"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a414"
+  },
+  "id": 36,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket djur kallas ofta 'människans bästa vän'?",
+  "options": [
+    "Katt",
+    "Får",
+    "Hund",
+    "Kanin"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a415"
+  },
+  "id": 37,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket land ligger väster om Sverige?",
+  "options": [
+    "Finland",
+    "Norge",
+    "Danmark",
+    "Estland"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a416"
+  },
+  "id": 38,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad heter den största ön i Sverige?",
+  "options": [
+    "Öland",
+    "Gotland",
+    "Orust",
+    "Hisingen"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a417"
+  },
+  "id": 39,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad är vatten i fast form?",
+  "options": [
+    "Ånga",
+    "Dimma",
+    "Is",
+    "Regn"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a418"
+  },
+  "id": 40,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilken siffra kommer efter 14?",
+  "options": [
+    "12",
+    "13",
+    "15",
+    "16"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a419"
+  },
+  "id": 41,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad heter sagodjuret med horn i pannan?",
+  "options": [
+    "Drake",
+    "Pegasus",
+    "Enhörning",
+    "Kentaur"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a41a"
+  },
+  "id": 42,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilken färg har en mogen banan?",
+  "options": [
+    "Röd",
+    "Grön",
+    "Gul",
+    "Blå"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a41b"
+  },
+  "id": 43,
+  "category": null,
+  "difficulty": null,
+  "text": "Hur många dagar är det i februari under ett skottår?",
+  "options": [
+    "28",
+    "29",
+    "30",
+    "31"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a41c"
+  },
+  "id": 44,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilken gas andas vi ut?",
+  "options": [
+    "Kväve",
+    "Syre",
+    "Koldioxid",
+    "Helium"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a41d"
+  },
+  "id": 45,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad är huvudstaden i Norge?",
+  "options": [
+    "Oslo",
+    "Bergen",
+    "Trondheim",
+    "Stavanger"
+  ],
+  "correctIndex": 0,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a41e"
+  },
+  "id": 46,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilken av dessa är ett bär?",
+  "options": [
+    "Tomat",
+    "Äpple",
+    "Päron",
+    "Selleri"
+  ],
+  "correctIndex": 0,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a41f"
+  },
+  "id": 47,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad kommer efter bokstaven C i alfabetet?",
+  "options": [
+    "A",
+    "B",
+    "D",
+    "E"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a420"
+  },
+  "id": 48,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket djur är känt för att leva i en myrstack?",
+  "options": [
+    "Bi",
+    "Myra",
+    "Fjäril",
+    "Tvestjärt"
+  ],
+  "correctIndex": 1,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a421"
+  },
+  "id": 49,
+  "category": null,
+  "difficulty": null,
+  "text": "Vad heter den svenska valutaenheten?",
+  "options": [
+    "Euro",
+    "Dollar",
+    "Krona",
+    "Pund"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+},
+{
+  "_id": {
+    "$oid": "692713faf0af45050619a422"
+  },
+  "id": 50,
+  "category": null,
+  "difficulty": null,
+  "text": "Vilket djur säger 'bää'?",
+  "options": [
+    "Ko",
+    "Get",
+    "Får",
+    "Häst"
+  ],
+  "correctIndex": 2,
+  "isActive": true,
+  "version": 1,
+  "createdAt": "2025-11-26T12:00:00Z",
+  "updatedAt": "2025-11-26T12:00:00Z"
+}]
