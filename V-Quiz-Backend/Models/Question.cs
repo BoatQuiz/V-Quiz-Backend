@@ -17,16 +17,16 @@ namespace V_Quiz_Backend.Models
         public int QuestionId { get; set; }
 
         [BsonElement("category")]
-        public string? Category { get; set; }
+        public string? Category { get; set; } = null;
 
         [BsonElement("difficulty")]
-        public string? Difficulty { get; set; }
+        public string? Difficulty { get; set; } = null;
 
         [BsonElement("text")]
-        public string Text { get; set; }
+        public string Text { get; set; } = string.Empty;
 
         [BsonElement("options")]
-        public List<string> Options { get; set; }
+        public List<string> Options { get; set; } = [];
 
         [BsonElement("correctIndex")]
         public int CorrectIndex { get; set; }

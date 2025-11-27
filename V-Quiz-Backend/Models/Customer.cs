@@ -17,12 +17,12 @@ namespace V_Quiz_Backend.Models
         public int CustomerId { get; set; }
 
         [BsonElement("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [BsonElement("email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [BsonElement("phone")]
-        public string Phone { get; set; }
+        public string Phone { get; set; } = string.Empty;
     }
 }
