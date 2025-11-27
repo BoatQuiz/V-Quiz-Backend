@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Functions
@@ -12,15 +13,27 @@ namespace V_Quiz_Backend.Functions
         private readonly QuestionService _service = service;
 
         [Function("GetQuestions")]
-        public async Task<HttpResponseData> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
+        public async Task<HttpResponseData> GetQuestionsAsync(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "questions")] HttpRequestData req)
         {
             var questions = await _service.GetAllQuestionsAsync();
             var json = System.Text.Json.JsonSerializer.Serialize(questions);
-            var response = req.CreateResponse(System.Net.HttpStatusCode.OK);
+            var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "application/json");
             await response.WriteStringAsync(json);
             return response;
-        }        
+        }
+
+        [Function("GetQuestionCount")]
+        public async Task <HttpResponseData> GetQuestionCountAsync(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "questions/count")] HttpRequestData req)
+        {
+            var count = await _service.GetQuestionCountAsync();
+            
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            
+            await response.WriteAsJsonAsync(new { count });
+            return response;
+        }
     }
 }

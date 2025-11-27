@@ -22,5 +22,10 @@ namespace V_Quiz_Backend.Repository
         {
             return await _collection.Find(_ => true).ToListAsync();
         }
+
+        public async Task<int> GetQuestionCountAsync()
+        {
+            return (int)await _collection.CountDocumentsAsync(_ => true);
+        }
     }
 }

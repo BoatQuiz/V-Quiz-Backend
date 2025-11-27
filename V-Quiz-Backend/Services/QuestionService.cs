@@ -19,5 +19,10 @@ namespace V_Quiz_Backend.Services
         {
             return await _repo.GetAllQuestionsAsync();
         }
+
+        public async Task<int> GetQuestionCountAsync()
+        {
+            return await _repo.GetQuestionCountAsync();
+        }
     }
 }
