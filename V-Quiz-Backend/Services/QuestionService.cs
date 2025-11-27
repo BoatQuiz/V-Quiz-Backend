@@ -11,9 +11,11 @@ namespace V_Quiz_Backend.Services
     public class QuestionService
     {
         private readonly QuestionRepository _repo;
-        public QuestionService(QuestionRepository repo)
+        private readonly SessionService _sessionService;
+        public QuestionService(QuestionRepository repo, SessionService sessionService)
         {
             _repo = repo;
+            _sessionService = sessionService;
         }
         public async Task<List<Question>> GetAllQuestionsAsync()
         {
@@ -23,6 +25,12 @@ namespace V_Quiz_Backend.Services
         public async Task<int> GetQuestionCountAsync()
         {
             return await _repo.GetQuestionCountAsync();
+        }
+
+        public async Task<Session> StartQuizAsync(Guid? userId = null)
+        {
+           var session = await _sessionService.CreateSessionAsync(userId);
+            return session;
         }
     }
 }

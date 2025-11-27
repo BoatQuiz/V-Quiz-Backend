@@ -14,6 +14,8 @@ builder.Services.AddSingleton<CustomerRepository>();
 builder.Services.AddSingleton<CustomerService>();
 builder.Services.AddSingleton<QuestionRepository>();
 builder.Services.AddSingleton<QuestionService>();
+builder.Services.AddSingleton<SessionRepository>();
+builder.Services.AddSingleton<SessionService>();
 
 // Application Insights isn't enabled by default. See https://aka.ms/AAt8mw4.
 // builder.Services

@@ -35,5 +35,15 @@ namespace V_Quiz_Backend.Functions
             await response.WriteAsJsonAsync(new { count });
             return response;
         }
+
+        [Function("StartQuiz")]
+        public async Task<HttpResponseData> StartQuizAsync(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "quiz/start")] HttpRequestData req)
+        {
+            var session = await _service.StartQuizAsync();
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(session);
+            return response;
+        }
     }
 }
