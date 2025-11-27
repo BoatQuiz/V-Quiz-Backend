@@ -22,5 +22,7 @@ namespace V_Quiz_Backend.Repository
         {
             await _collection.InsertOneAsync(session);
         }
+
+        
     }
 }

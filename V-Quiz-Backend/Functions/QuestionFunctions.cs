@@ -45,5 +45,12 @@ namespace V_Quiz_Backend.Functions
             await response.WriteAsJsonAsync(session);
             return response;
         }
+
+        [Function("SubmitAnswer")]
+        public async Task<HttpResponseData> SubmitAnswer(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "quiz/submitAnswer")] HttpRequestData req)
+        {
+
+        }
     }
 }
