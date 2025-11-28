@@ -11,10 +11,11 @@ namespace V_Quiz_Backend.Models
     public class Question
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string MongoId { get; set; } = string.Empty;
 
-        [BsonElement("id")]
-        public int QuestionId { get; set; }
+        [BsonElement("questionId")]
+        public string QuestionId { get; set; } = string.Empty;
 
         [BsonElement("category")]
         public string? Category { get; set; } = null;

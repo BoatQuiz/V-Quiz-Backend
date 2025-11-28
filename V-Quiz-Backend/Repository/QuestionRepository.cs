@@ -27,5 +27,22 @@ namespace V_Quiz_Backend.Repository
         {
             return (int)await _collection.CountDocumentsAsync(_ => true);
         }
+
+        public async Task <Question> GetQuestionByIdAsync(string questionId)
+        {
+            var filter = Builders<Question>.Filter.Eq(q => q.QuestionId, questionId);
+            return await _collection.Find(filter).FirstOrDefaultAsync();
+        }
+
+        public async Task<Question> GetRandomQuestionAsync(List<string> usedQuestions)
+        {
+            var filter = Builders<Question>.Filter.Nin(p => p.QuestionId, usedQuestions);
+
+            return await _collection.Aggregate()
+                .Match(filter)
+                .Sample(1)
+                .FirstOrDefaultAsync();
+        }
+            
     }
 }

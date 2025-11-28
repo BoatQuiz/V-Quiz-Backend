@@ -31,5 +31,15 @@ namespace V_Quiz_Backend.Services
             await _Repo.CreateSessionAsync(session);
             return session;
         }
+
+        public async Task<Session> GetSessionByIdAsync(Guid sessionId)
+        {
+            return await _Repo.GetSessionAsync(sessionId);
+        }
+
+        public async Task UpdateSessionAsync(Session session)
+        {
+            await _Repo.UpdateSessionAsync(session);
+        }
     }
 }
