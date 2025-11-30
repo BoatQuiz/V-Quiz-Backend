@@ -26,7 +26,8 @@ namespace V_Quiz_Backend.Services
                 UsedQuestions = new List<string>(),
                 NumCorrectAnswers = 0,
                 NumQuestions = 0,
-                StoppedAt = null
+                StoppedAt = null,
+                IsCompleted = false
             };
             await _repo.CreateSessionAsync(session);
             return session;

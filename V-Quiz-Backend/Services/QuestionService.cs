@@ -13,15 +13,6 @@ namespace V_Quiz_Backend.Services
             _repo = repo;
             _sessionService = sessionService;
         }
-        public async Task<List<Question>> GetAllQuestionsAsync()
-        {
-            return await _repo.GetAllQuestionsAsync();
-        }
-
-        public async Task<int> GetQuestionCountAsync()
-        {
-            return await _repo.GetQuestionCountAsync();
-        }
 
         public async Task<QuestionResponse> StartQuizAsync(Guid? userId = null)
         {
@@ -30,7 +21,16 @@ namespace V_Quiz_Backend.Services
             
             return new QuestionResponse
             {
-                
+                Session = new SubmitSessionId
+                {
+                    SessionId = session.Id
+                },
+                Question = new QuestionResponseDto
+                {
+                    QuestionId = question.QuestionId,
+                    QuestionText = question.Text,
+                    Options = question.Options
+                }
 
             };
         }
@@ -40,17 +40,30 @@ namespace V_Quiz_Backend.Services
             return await _repo.GetQuestionByIdAsync(questionId);
         }
 
-        public async Task<SubmitAnswerResponse> SubmitAnswerAsync(SubmitAnswerRequest request)
+        public async Task<ServiceResponse<SubmitAnswerResponse>> SubmitAnswerAsync(SubmitAnswerRequest request)
         {
+            var response = new ServiceResponse<SubmitAnswerResponse>();
             var session = await _sessionService.GetSessionByIdAsync(request.SessionId);
+
             if (session == null)
             {
-                throw new Exception("Session not found.");
+                response.Success = false;
+                response.Message = "Session not found.";
+                return response;
+            }
+
+            if (session.IsCompleted)
+            {
+                response.Success = false;
+                response.Message = "Session is already completed.";
+                return response;
             }
             var question = await GetQuestionByIdAsync(request.QuestionId);
             if (question == null)
             {
-                throw new Exception("Question not found.");
+                response.Success = false;
+                response.Message = "Question not found.";
+                return response;
             }
 
             bool isCorrect = question.CorrectIndex == request.SelectedAnswer;
@@ -67,30 +80,43 @@ namespace V_Quiz_Backend.Services
             {
                 isLastQuestion = true;
                 session.StoppedAt = DateTime.UtcNow;
+                session.IsCompleted = true;
             }
 
 
             await _sessionService.UpdateSessionAsync(session);
 
-            var responseObj = new SubmitAnswerResponse
+            response.Data = new SubmitAnswerResponse
             {
                 IsCorrect = isCorrect,
-                CorrectIndex = question.CorrectIndex,
                 CorrectAnswer = question.Options[question.CorrectIndex],
-                //Explanation = question.Explanation ?? "",
-                //infoUrl = question.InfoUrl ?? "",
                 IsLastQuestion = isLastQuestion,
                 Score = session.NumCorrectAnswers,
                 QuestionsAnswered = session.NumQuestions
             };
 
-            return responseObj;
+            return response;
         }
 
-        public async Task<Question> GetNextQuestionAsync (SubmitSessionId sessionReq)
+        public async Task<QuestionResponse> GetNextQuestionAsync (SubmitSessionId sessionReq)
         {
             var session = await _sessionService.GetSessionByIdAsync(sessionReq.SessionId);
-            return await _repo.GetRandomQuestionAsync(session.UsedQuestions);
+            var question= await _repo.GetRandomQuestionAsync(session.UsedQuestions);
+
+            return new QuestionResponse
+            {
+                Session = new SubmitSessionId
+                {
+                    SessionId = session.Id
+                },
+                Question = new QuestionResponseDto
+                {
+                    QuestionId = question.QuestionId,
+                    QuestionText = question.Text,
+                    Options = question.Options
+                }
+
+            };
         }
     }
 }

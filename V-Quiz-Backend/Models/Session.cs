@@ -33,5 +33,8 @@ namespace V_Quiz_Backend.Models
         
         [BsonElement("numQuestions")]
         public int NumQuestions { get; set; } = 0;
+
+        [BsonElement("isCompleted")]
+        public bool IsCompleted = false;
     }
 }
