@@ -47,23 +47,17 @@ namespace V_Quiz_Backend.Services
 
             if (session == null)
             {
-                response.Success = false;
-                response.Message = "Session not found.";
-                return response;
+                return ServiceResponse<SubmitAnswerResponse>.Fail("Session not found.");
             }
 
             if (session.IsCompleted)
             {
-                response.Success = false;
-                response.Message = "Session is already completed.";
-                return response;
+                return ServiceResponse<SubmitAnswerResponse>.Fail("Session is already completed.");
             }
             var question = await GetQuestionByIdAsync(request.QuestionId);
             if (question == null)
             {
-                response.Success = false;
-                response.Message = "Question not found.";
-                return response;
+                return ServiceResponse<SubmitAnswerResponse>.Fail("Question not found.");
             }
 
             bool isCorrect = question.CorrectIndex == request.SelectedAnswer;
