@@ -27,7 +27,7 @@ namespace V_Quiz_Backend.Services
         {
             var session = await _sessionService.CreateSessionAsync(userId);
             var question = await _repo.GetRandomQuestionAsync(session.UsedQuestions);
-            
+
             return new StartQuizResult
             {
                 Session = session,
@@ -87,10 +87,23 @@ namespace V_Quiz_Backend.Services
             return responseObj;
         }
 
-        public async Task<Question> GetNextQuestionAsync (SubmitSessionId sessionReq)
+        public async Task<QuestionDto> GetNextQuestionAsync(SubmitSessionId sessionReq)
         {
             var session = await _sessionService.GetSessionByIdAsync(sessionReq.SessionId);
-            return await _repo.GetRandomQuestionAsync(session.UsedQuestions);
+            var question = await _repo.GetRandomQuestionAsync(session.UsedQuestions);
+
+            if (question == null)
+            {
+                return null;
+            }
+
+            var questionDto = new QuestionDto
+            {
+                QuestionId = question.QuestionId,
+                Text = question.Text,
+                Options = question.Options
+            };
+            return questionDto;
         }
     }
 }
