@@ -23,15 +23,15 @@ namespace V_Quiz_Backend.Services
             return await _repo.GetQuestionCountAsync();
         }
 
-        public async Task<StartQuizResult> StartQuizAsync(Guid? userId = null)
+        public async Task<QuestionResponse> StartQuizAsync(Guid? userId = null)
         {
             var session = await _sessionService.CreateSessionAsync(userId);
             var question = await _repo.GetRandomQuestionAsync(session.UsedQuestions);
             
-            return new StartQuizResult
+            return new QuestionResponse
             {
-                Session = session,
-                RandomQuestion = question
+                
+
             };
         }
 

@@ -10,11 +10,11 @@ namespace V_Quiz_Backend.Services
 {
     public class SessionService
     {
-        private readonly SessionRepository _Repo;
+        private readonly SessionRepository _repo;
 
         public SessionService(SessionRepository repo)
         {
-            _Repo = repo;
+            _repo = repo;
         }
 
         public async Task<Session> CreateSessionAsync(Guid? userId=null)
@@ -28,18 +28,18 @@ namespace V_Quiz_Backend.Services
                 NumQuestions = 0,
                 StoppedAt = null
             };
-            await _Repo.CreateSessionAsync(session);
+            await _repo.CreateSessionAsync(session);
             return session;
         }
 
         public async Task<Session> GetSessionByIdAsync(Guid sessionId)
         {
-            return await _Repo.GetSessionAsync(sessionId);
+            return await _repo.GetSessionAsync(sessionId);
         }
 
         public async Task UpdateSessionAsync(Session session)
         {
-            await _Repo.UpdateSessionAsync(session);
+            await _repo.UpdateSessionAsync(session);
         }
     }
 }
