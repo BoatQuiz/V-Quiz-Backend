@@ -10,12 +10,12 @@ builder.ConfigureFunctionsWebApplication();
 
 // Register MongoDbService as a singleton
 builder.Services.AddSingleton<MongoDbService>();
-builder.Services.AddSingleton<CustomerRepository>();
-builder.Services.AddSingleton<CustomerService>();
 builder.Services.AddSingleton<QuestionRepository>();
 builder.Services.AddSingleton<QuestionService>();
 builder.Services.AddSingleton<SessionRepository>();
 builder.Services.AddSingleton<SessionService>();
+builder.Services.AddSingleton<FlagRepository>();
+builder.Services.AddSingleton<FlagService>();
 
 // Application Insights isn't enabled by default. See https://aka.ms/AAt8mw4.
 // builder.Services
