@@ -7,10 +7,9 @@ using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Functions
 {
-    public class QuestionFunctions(QuestionService questionService, SessionService sessionService)
+    public class QuestionFunctions(QuestionService questionService)
     {
         private readonly QuestionService _questionService = questionService;
-
 
         [Function("StartQuiz")]
         public async Task<HttpResponseData> StartQuizAsync(
