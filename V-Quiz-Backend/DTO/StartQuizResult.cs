@@ -9,7 +9,7 @@ namespace V_Quiz_Backend.DTO
 {
     public class StartQuizResult
     {
-        public Session Session { get; set; }
-        public Question RandomQuestion { get; set; }
+        public SessionId Session { get; set; }
+        public QuestionOutDto RandomQuestion { get; set; }
     }
 }

@@ -30,8 +30,13 @@ namespace V_Quiz_Backend.Services
             
             return new StartQuizResult
             {
-                Session = session,
-                RandomQuestion = question
+                Session = new SessionId { Session_Id = session.Id},
+                RandomQuestion = new QuestionOutDto
+                {
+                    QuestionId = question.QuestionId,             
+                    Text = question.Text,
+                    Options = question.Options
+                },
             };
         }
 
@@ -76,7 +81,6 @@ namespace V_Quiz_Backend.Services
             {
                 IsCorrect = isCorrect,
                 CorrectIndex = question.CorrectIndex,
-                CorrectAnswer = question.Options[question.CorrectIndex],
                 //Explanation = question.Explanation ?? "",
                 //infoUrl = question.InfoUrl ?? "",
                 IsLastQuestion = isLastQuestion,
@@ -87,10 +91,24 @@ namespace V_Quiz_Backend.Services
             return responseObj;
         }
 
-        public async Task<Question> GetNextQuestionAsync (SubmitSessionId sessionReq)
+        public async Task<StartQuizResult> GetNextQuestionAsync (SubmitSessionId sessionReq)
         {
             var session = await _sessionService.GetSessionByIdAsync(sessionReq.SessionId);
-            return await _repo.GetRandomQuestionAsync(session.UsedQuestions);
+
+            var question = await _repo.GetRandomQuestionAsync(session.UsedQuestions);
+            
+            var quizResult = new StartQuizResult
+            {
+                Session = new SessionId { Session_Id = session.Id},
+                RandomQuestion = new QuestionOutDto
+                {
+                    QuestionId = question.QuestionId,             
+                    Text = question.Text,
+                    Options = question.Options
+                },
+            };
+
+            return quizResult;
         }
     }
 }
