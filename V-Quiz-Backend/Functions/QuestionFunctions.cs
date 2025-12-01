@@ -7,34 +7,9 @@ using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Functions
 {
-    public class QuestionFunctions(QuestionService questionService, SessionService sessionService)
+    public class QuestionFunctions(QuestionService questionService)
     {
         private readonly QuestionService _questionService = questionService;
-        private readonly SessionService _sessionService = sessionService;
-
-        [Function("GetQuestions")]
-        public async Task<HttpResponseData> GetQuestionsAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "questions")] HttpRequestData req)
-        {
-            var questions = await _questionService.GetAllQuestionsAsync();
-            var json = System.Text.Json.JsonSerializer.Serialize(questions);
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "application/json");
-            await response.WriteStringAsync(json);
-            return response;
-        }
-
-        [Function("GetQuestionCount")]
-        public async Task<HttpResponseData> GetQuestionCountAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "questions/count")] HttpRequestData req)
-        {
-            var count = await _questionService.GetQuestionCountAsync();
-
-            var response = req.CreateResponse(HttpStatusCode.OK);
-
-            await response.WriteAsJsonAsync(new { count });
-            return response;
-        }
 
         [Function("StartQuiz")]
         public async Task<HttpResponseData> StartQuizAsync(

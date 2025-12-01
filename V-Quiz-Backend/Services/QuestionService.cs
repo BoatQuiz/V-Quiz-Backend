@@ -13,30 +13,25 @@ namespace V_Quiz_Backend.Services
             _repo = repo;
             _sessionService = sessionService;
         }
-        public async Task<List<Question>> GetAllQuestionsAsync()
-        {
-            return await _repo.GetAllQuestionsAsync();
-        }
 
-        public async Task<int> GetQuestionCountAsync()
-        {
-            return await _repo.GetQuestionCountAsync();
-        }
-
-        public async Task<StartQuizResult> StartQuizAsync(Guid? userId = null)
+        public async Task<QuestionResponse> StartQuizAsync(Guid? userId = null)
         {
             var session = await _sessionService.CreateSessionAsync(userId);
             var question = await _repo.GetRandomQuestionAsync(session.UsedQuestions);
             
-            return new StartQuizResult
+            return new QuestionResponse
             {
-                Session = new SessionId { Session_Id = session.Id},
-                RandomQuestion = new QuestionOutDto
+                Session = new SubmitSessionId
                 {
-                    QuestionId = question.QuestionId,             
-                    Text = question.Text,
-                    Options = question.Options
+                    SessionId = session.Id
                 },
+                Question = new QuestionResponseDto
+                {
+                    QuestionId = question.QuestionId,
+                    QuestionText = question.Text,
+                    Options = question.Options
+                }
+
             };
         }
 
@@ -45,17 +40,24 @@ namespace V_Quiz_Backend.Services
             return await _repo.GetQuestionByIdAsync(questionId);
         }
 
-        public async Task<SubmitAnswerResponse> SubmitAnswerAsync(SubmitAnswerRequest request)
+        public async Task<ServiceResponse<SubmitAnswerResponse>> SubmitAnswerAsync(SubmitAnswerRequest request)
         {
+            var response = new ServiceResponse<SubmitAnswerResponse>();
             var session = await _sessionService.GetSessionByIdAsync(request.SessionId);
+
             if (session == null)
             {
-                throw new Exception("Session not found.");
+                return ServiceResponse<SubmitAnswerResponse>.Fail("Session not found.");
+            }
+
+            if (session.IsCompleted)
+            {
+                return ServiceResponse<SubmitAnswerResponse>.Fail("Session is already completed.");
             }
             var question = await GetQuestionByIdAsync(request.QuestionId);
             if (question == null)
             {
-                throw new Exception("Question not found.");
+                return ServiceResponse<SubmitAnswerResponse>.Fail("Question not found.");
             }
 
             bool isCorrect = question.CorrectIndex == request.SelectedAnswer;
@@ -72,43 +74,43 @@ namespace V_Quiz_Backend.Services
             {
                 isLastQuestion = true;
                 session.StoppedAt = DateTime.UtcNow;
+                session.IsCompleted = true;
             }
 
 
             await _sessionService.UpdateSessionAsync(session);
 
-            var responseObj = new SubmitAnswerResponse
+            response.Data = new SubmitAnswerResponse
             {
                 IsCorrect = isCorrect,
-                CorrectIndex = question.CorrectIndex,
-                //Explanation = question.Explanation ?? "",
-                //infoUrl = question.InfoUrl ?? "",
+                CorrectAnswer = question.Options[question.CorrectIndex],
                 IsLastQuestion = isLastQuestion,
                 Score = session.NumCorrectAnswers,
                 QuestionsAnswered = session.NumQuestions
             };
 
-            return responseObj;
+            return response;
         }
 
-        public async Task<StartQuizResult> GetNextQuestionAsync (SubmitSessionId sessionReq)
+        public async Task<QuestionResponse> GetNextQuestionAsync (SubmitSessionId sessionReq)
         {
             var session = await _sessionService.GetSessionByIdAsync(sessionReq.SessionId);
+            var question= await _repo.GetRandomQuestionAsync(session.UsedQuestions);
 
-            var question = await _repo.GetRandomQuestionAsync(session.UsedQuestions);
-            
-            var quizResult = new StartQuizResult
+            return new QuestionResponse
             {
-                Session = new SessionId { Session_Id = session.Id},
-                RandomQuestion = new QuestionOutDto
+                Session = new SubmitSessionId
                 {
-                    QuestionId = question.QuestionId,             
-                    Text = question.Text,
-                    Options = question.Options
+                    SessionId = session.Id
                 },
-            };
+                Question = new QuestionResponseDto
+                {
+                    QuestionId = question.QuestionId,
+                    QuestionText = question.Text,
+                    Options = question.Options
+                }
 
-            return quizResult;
+            };
         }
     }
 }
