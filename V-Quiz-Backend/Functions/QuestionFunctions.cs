@@ -47,7 +47,7 @@ namespace V_Quiz_Backend.Functions
 
         [Function("GetNextQuestion")]
         public async Task<HttpResponseData> GetNextQuestionAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "quiz/getNextQuestion")] HttpRequestData req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "quiz/getNextQuestion")] HttpRequestData req)
         {
             var request = await req.ReadFromJsonAsync<SubmitSessionId>();
             if (request == null)
