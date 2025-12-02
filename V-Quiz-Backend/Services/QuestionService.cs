@@ -99,6 +99,7 @@ namespace V_Quiz_Backend.Services
             response.Data = new SubmitAnswerResponse
             {
                 IsCorrect = isCorrect,
+                CorrectIndex = question.Data.CorrectIndex,
                 CorrectAnswer = question.Data.Options[question.Data.CorrectIndex],
                 IsLastQuestion = isLastQuestion,
                 Score = session.NumCorrectAnswers,
