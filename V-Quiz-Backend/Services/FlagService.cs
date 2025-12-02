@@ -1,12 +1,19 @@
 ﻿using V_Quiz_Backend.DTO;
+using V_Quiz_Backend.Interface.Repos;
+using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Repository;
 
 namespace V_Quiz_Backend.Services
 {
-    public class FlagService(FlagRepository flagRepo)
+    public class FlagService : IFlagService 
     {
-        private readonly FlagRepository _flagRepo = flagRepo;
+        private readonly IFlagRepository _flagRepo;
+
+        public FlagService(IFlagRepository flagRepo)
+        {
+            _flagRepo = flagRepo;
+        }
 
         public async Task<ServiceResponse<FlaggedQuestion>> FlagQuestion(FlagQuestionRequestDto flaggedQuestion)
         {
@@ -27,6 +34,7 @@ namespace V_Quiz_Backend.Services
 
             var existingFlag = await _flagRepo.GetFlaggedQuestionByIdAsync(flaggedQuestion.QuestionId);
 
+            // If no existing flag entry, create a new one
             if (existingFlag == null) 
             {
                 var flaggedQuestionModel = new FlaggedQuestion
@@ -46,6 +54,7 @@ namespace V_Quiz_Backend.Services
                 };
             }
 
+            // If an existing flag entry is found, append the new flag
             existingFlag.Flags.Add(flagEntry);
             await _flagRepo.UpdateFlaggedQuestionAsync(existingFlag);
             return new ServiceResponse<FlaggedQuestion>
