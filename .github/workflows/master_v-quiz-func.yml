@@ -27,17 +27,16 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: "Restore Dependencies"
-        run: dotnet restore 
+        run: dotnet restore V-Quiz.sln
 
       - name: 'Build project'
-        shell: pwsh
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          dotnet build --configuration Release --output ./output
-          popd
+        run: dotnet build V-Quiz.sln --configuration Release --no-restore
 
       - name: "Run Tests"
-        run: dotnet test --configuration Relese --no-build
+        run: dotnet test V-Quiz.sln --configuration Release --no-build
+
+      - name: "Publish Function App"
+        run: dotnet publish ./V-Quiz-Backend/V-Quiz-Backend.csproj -c Release -o ./publish
       
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
@@ -48,4 +47,5 @@ jobs:
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
 
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_177C9C3991CB4632BF3D0E0E4E0AE62A }}
+
 
