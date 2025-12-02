@@ -12,13 +12,13 @@ namespace V_Quiz_Backend.Services
         public async Task<ServiceResponse<QuestionResponse>> StartQuizAsync(Guid? userId = null)
         {
             var session = await _sessionService.CreateSessionAsync(userId);
-            var question = await _repo.GetRandomQuestionAsync(session.UsedQuestions);
+            var question = await _repo.GetRandomQuestionAsync(session.Data.UsedQuestions);
 
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
             {
                 Session = new SubmitSessionId
                 {
-                    SessionId = session.Id
+                    SessionId = session.Data.Id
                 },
                 Question = new QuestionResponseDto
                 {
@@ -51,7 +51,7 @@ namespace V_Quiz_Backend.Services
                 return ServiceResponse<SubmitAnswerResponse>.Fail("Session not found.");
             }
 
-            if (session.IsCompleted)
+            if (session.Data.IsCompleted)
             {
                 return ServiceResponse<SubmitAnswerResponse>.Fail("Session is already completed.");
             }
@@ -65,29 +65,28 @@ namespace V_Quiz_Backend.Services
 
             if (isCorrect)
             {
-                session.NumCorrectAnswers++;
+                session.Data.NumCorrectAnswers++;
             }
-            session.NumQuestions++;
-            session.UsedQuestions.Add(request.QuestionId.ToString());
+            session.Data.NumQuestions++;
+            session.Data.UsedQuestions.Add(request.QuestionId.ToString());
 
             var isLastQuestion = false;
-            if (session.NumQuestions >= 10)
+            if (session.Data.NumQuestions >= 10)
             {
                 isLastQuestion = true;
-                session.StoppedAt = DateTime.UtcNow;
-                session.IsCompleted = true;
+                session.Data.StoppedAt = DateTime.UtcNow;
+                session.Data.IsCompleted = true;
             }
 
-
-            await _sessionService.UpdateSessionAsync(session);
+            await _sessionService.UpdateSessionAsync(session.Data);
 
             response.Data = new SubmitAnswerResponse
             {
                 IsCorrect = isCorrect,
                 CorrectAnswer = question.Data.Options[question.Data.CorrectIndex],
                 IsLastQuestion = isLastQuestion,
-                Score = session.NumCorrectAnswers,
-                QuestionsAnswered = session.NumQuestions
+                Score = session.Data.NumCorrectAnswers,
+                QuestionsAnswered = session.Data.NumQuestions
             };
 
             return response;
@@ -96,14 +95,14 @@ namespace V_Quiz_Backend.Services
         public async Task<ServiceResponse<QuestionResponse>> GetNextQuestionAsync(SubmitSessionId sessionReq)
         {
             var session = await _sessionService.GetSessionByIdAsync(sessionReq.SessionId);
-            var question = await _repo.GetRandomQuestionAsync(session.UsedQuestions);
+            var question = await _repo.GetRandomQuestionAsync(session.Data.UsedQuestions);
 
             return ServiceResponse<QuestionResponse>.Ok(
                 new QuestionResponse
                 {
                     Session = new SubmitSessionId
                     {
-                        SessionId = session.Id
+                        SessionId = session.Data.Id
                     },
                     Question = new QuestionResponseDto
                     {
