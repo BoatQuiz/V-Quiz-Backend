@@ -2,14 +2,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
+using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Functions
 {
-    public class QuestionFunctions(QuestionService questionService)
+    public class QuestionFunctions
     {
-        private readonly QuestionService _questionService = questionService;
+        private readonly IQuestionService _questionService;
+
+        public QuestionFunctions(IQuestionService questionService)
+        {
+            _questionService = questionService;
+        }
 
         [Function("StartQuiz")]
         public async Task<HttpResponseData> StartQuizAsync(

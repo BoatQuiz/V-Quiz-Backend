@@ -4,19 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using V_Quiz_Backend.Interface.Repos;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Repository
 {
-    public class QuestionRepository
+    public class QuestionRepository(MongoDbService mongo) : IQuestionRepository
     {
-        private readonly IMongoCollection<Question> _collection;
-
-        public QuestionRepository(MongoDbService mongo)
-        {
-            _collection = mongo.Database.GetCollection<Question>("Questions");
-        }
+        private readonly IMongoCollection<Question> _collection = mongo.Database.GetCollection<Question>("Questions");
 
         public async Task<List<Question>> GetAllQuestionsAsync()
         {

@@ -1,12 +1,17 @@
 ﻿using MongoDB.Driver;
+using V_Quiz_Backend.Interface.Repos;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Repository
 {
-    public class SessionRepository(MongoDbService mongo)
+    public class SessionRepository : ISessionRepository
     {
-        private readonly IMongoCollection<Session> _collection = mongo.Database.GetCollection<Session>("Sessions");
+        private readonly IMongoCollection<Session> _collection;
+        public SessionRepository(MongoDbService mongo)
+        {
+            _collection = mongo.Database.GetCollection<Session>("Sessions");
+        }
 
         public async Task<bool> CreateSessionAsync(Session session)
         {

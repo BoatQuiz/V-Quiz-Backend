@@ -1,11 +1,13 @@
-﻿using V_Quiz_Backend.Models;
+﻿using V_Quiz_Backend.Interface.Repos;
+using V_Quiz_Backend.Interface.Services;
+using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Repository;
 
 namespace V_Quiz_Backend.Services
 {
-    public class SessionService(SessionRepository repo)
+    public class SessionService(ISessionRepository repo) : ISessionService
     {
-        private readonly SessionRepository _repo = repo;
+        private readonly ISessionRepository _repo = repo;
 
         public async Task<ServiceResponse<Session>> CreateSessionAsync(Guid? userId = null)
         {

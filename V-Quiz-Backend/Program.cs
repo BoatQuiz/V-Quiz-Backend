@@ -1,6 +1,8 @@
 using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using V_Quiz_Backend.Interface.Repos;
+using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Repository;
 using V_Quiz_Backend.Services;
 
@@ -10,12 +12,16 @@ builder.ConfigureFunctionsWebApplication();
 
 // Register MongoDbService as a singleton
 builder.Services.AddSingleton<MongoDbService>();
-builder.Services.AddSingleton<QuestionRepository>();
-builder.Services.AddSingleton<QuestionService>();
-builder.Services.AddSingleton<SessionRepository>();
-builder.Services.AddSingleton<SessionService>();
-builder.Services.AddSingleton<FlagRepository>();
-builder.Services.AddSingleton<FlagService>();
+
+// Register Repository
+builder.Services.AddSingleton<IQuestionRepository, QuestionRepository>();
+builder.Services.AddSingleton<ISessionRepository, SessionRepository>();
+builder.Services.AddSingleton<IFlagRepository, FlagRepository>();
+
+// Register Service
+builder.Services.AddSingleton<IQuestionService, QuestionService>();
+builder.Services.AddSingleton<ISessionService, SessionService>();
+builder.Services.AddSingleton<IFlagService, FlagService>();
 
 // Application Insights isn't enabled by default. See https://aka.ms/AAt8mw4.
 // builder.Services
