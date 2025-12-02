@@ -1,13 +1,15 @@
 ﻿using V_Quiz_Backend.DTO;
+using V_Quiz_Backend.Interface.Repos;
+using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Repository;
 
 namespace V_Quiz_Backend.Services
 {
-    public class QuestionService(QuestionRepository repo, SessionService sessionService)
+    public class QuestionService(IQuestionRepository repo, ISessionService sessionService) : IQuestionService
     {
-        private readonly QuestionRepository _repo = repo;
-        private readonly SessionService _sessionService = sessionService;
+        private readonly IQuestionRepository _repo = repo;
+        private readonly ISessionService _sessionService = sessionService;
 
         public async Task<ServiceResponse<QuestionResponse>> StartQuizAsync(Guid? userId = null)
         {

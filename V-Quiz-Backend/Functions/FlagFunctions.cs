@@ -1,15 +1,19 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
+using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Functions;
 
-public class FlagFunctions(FlagService flagService)
+public class FlagFunctions
 {
-    private readonly FlagService _flagService = flagService;
+    private readonly IFlagService _flagService;
+
+    public FlagFunctions(IFlagService flagService)
+    {
+        _flagService = flagService;
+    }
 
     [Function("FlagFunctions")]
     public async Task<HttpResponseData> FlagQuestionAsync(
