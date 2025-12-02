@@ -4,22 +4,17 @@ using V_Quiz_Backend.Repository;
 
 namespace V_Quiz_Backend.Services
 {
-    public class QuestionService
+    public class QuestionService(QuestionRepository repo, SessionService sessionService)
     {
-        private readonly QuestionRepository _repo;
-        private readonly SessionService _sessionService;
-        public QuestionService(QuestionRepository repo, SessionService sessionService)
-        {
-            _repo = repo;
-            _sessionService = sessionService;
-        }
+        private readonly QuestionRepository _repo = repo;
+        private readonly SessionService _sessionService = sessionService;
 
-        public async Task<QuestionResponse> StartQuizAsync(Guid? userId = null)
+        public async Task<ServiceResponse<QuestionResponse>> StartQuizAsync(Guid? userId = null)
         {
             var session = await _sessionService.CreateSessionAsync(userId);
             var question = await _repo.GetRandomQuestionAsync(session.UsedQuestions);
-            
-            return new QuestionResponse
+
+            return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
             {
                 Session = new SubmitSessionId
                 {
@@ -31,13 +26,19 @@ namespace V_Quiz_Backend.Services
                     QuestionText = question.Text,
                     Options = question.Options
                 }
-
-            };
+            });
         }
 
-        public async Task<Question> GetQuestionByIdAsync(string questionId)
+        public async Task<ServiceResponse<Question>> GetQuestionByIdAsync(string questionId)
         {
-            return await _repo.GetQuestionByIdAsync(questionId);
+            var question = await _repo.GetQuestionByIdAsync(questionId);
+
+            if (question == null)
+            {
+                return ServiceResponse<Question>.Fail("Question not found.");
+            }
+
+            return ServiceResponse<Question>.Ok(question);
         }
 
         public async Task<ServiceResponse<SubmitAnswerResponse>> SubmitAnswerAsync(SubmitAnswerRequest request)
@@ -60,7 +61,7 @@ namespace V_Quiz_Backend.Services
                 return ServiceResponse<SubmitAnswerResponse>.Fail("Question not found.");
             }
 
-            bool isCorrect = question.CorrectIndex == request.SelectedAnswer;
+            bool isCorrect = question.Data.CorrectIndex == request.SelectedAnswer;
 
             if (isCorrect)
             {
@@ -83,7 +84,7 @@ namespace V_Quiz_Backend.Services
             response.Data = new SubmitAnswerResponse
             {
                 IsCorrect = isCorrect,
-                CorrectAnswer = question.Options[question.CorrectIndex],
+                CorrectAnswer = question.Data.Options[question.Data.CorrectIndex],
                 IsLastQuestion = isLastQuestion,
                 Score = session.NumCorrectAnswers,
                 QuestionsAnswered = session.NumQuestions
@@ -92,25 +93,26 @@ namespace V_Quiz_Backend.Services
             return response;
         }
 
-        public async Task<QuestionResponse> GetNextQuestionAsync (SubmitSessionId sessionReq)
+        public async Task<ServiceResponse<QuestionResponse>> GetNextQuestionAsync(SubmitSessionId sessionReq)
         {
             var session = await _sessionService.GetSessionByIdAsync(sessionReq.SessionId);
-            var question= await _repo.GetRandomQuestionAsync(session.UsedQuestions);
+            var question = await _repo.GetRandomQuestionAsync(session.UsedQuestions);
 
-            return new QuestionResponse
-            {
-                Session = new SubmitSessionId
+            return ServiceResponse<QuestionResponse>.Ok(
+                new QuestionResponse
                 {
-                    SessionId = session.Id
-                },
-                Question = new QuestionResponseDto
-                {
-                    QuestionId = question.QuestionId,
-                    QuestionText = question.Text,
-                    Options = question.Options
+                    Session = new SubmitSessionId
+                    {
+                        SessionId = session.Id
+                    },
+                    Question = new QuestionResponseDto
+                    {
+                        QuestionId = question.QuestionId,
+                        QuestionText = question.Text,
+                        Options = question.Options
+                    }
                 }
-
-            };
+            );
         }
     }
 }

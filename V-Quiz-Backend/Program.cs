@@ -10,8 +10,6 @@ builder.ConfigureFunctionsWebApplication();
 
 // Register MongoDbService as a singleton
 builder.Services.AddSingleton<MongoDbService>();
-builder.Services.AddSingleton<CustomerRepository>();
-builder.Services.AddSingleton<CustomerService>();
 builder.Services.AddSingleton<QuestionRepository>();
 builder.Services.AddSingleton<QuestionService>();
 builder.Services.AddSingleton<SessionRepository>();

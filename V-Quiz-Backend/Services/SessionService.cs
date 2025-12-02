@@ -8,17 +8,13 @@ using V_Quiz_Backend.Repository;
 
 namespace V_Quiz_Backend.Services
 {
-    public class SessionService
+    public class SessionService(SessionRepository repo)
     {
-        private readonly SessionRepository _repo;
+        private readonly SessionRepository _repo = repo;
 
-        public SessionService(SessionRepository repo)
+        public async Task<ServiceResponse<Session>> CreateSessionAsync(Guid? userId = null)
         {
-            _repo = repo;
-        }
 
-        public async Task<Session> CreateSessionAsync(Guid? userId=null)
-        {
             var session = new Session
             {
                 UserId = userId,
@@ -29,18 +25,47 @@ namespace V_Quiz_Backend.Services
                 StoppedAt = null,
                 IsCompleted = false
             };
-            await _repo.CreateSessionAsync(session);
-            return session;
+
+            try
+            {
+                var insertSucceded = await _repo.CreateSessionAsync(session);
+
+                if (!insertSucceded)
+                {
+                    return ServiceResponse<Session>.Fail("Failed to create session.");
+                }
+            return ServiceResponse<Session>.Ok(session, "Session created successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<Session>.Fail("Failed to create session: " + ex.Message);
+            }
         }
 
-        public async Task<Session> GetSessionByIdAsync(Guid sessionId)
+        public async Task<ServiceResponse<Session>> GetSessionByIdAsync(Guid sessionId)
         {
-            return await _repo.GetSessionAsync(sessionId);
+            var session = await _repo.GetSessionAsync(sessionId);
+
+            if (session == null)
+            {
+                return ServiceResponse<Session>.Fail("Session not found.");
+            }
+
+            return ServiceResponse<Session>.Ok(session);
         }
 
-        public async Task UpdateSessionAsync(Session session)
+        public async Task<ServiceResponse<bool>> UpdateSessionAsync(Session session)
         {
-            await _repo.UpdateSessionAsync(session);
+            try
+            {
+                await _repo.UpdateSessionAsync(session);
+                return ServiceResponse<bool>.Ok(true, "Session updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<bool>.Fail("Failed to update session: " + ex.Message);
+
+            }
         }
     }
 }

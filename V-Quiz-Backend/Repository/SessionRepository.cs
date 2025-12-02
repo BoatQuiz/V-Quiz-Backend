@@ -1,9 +1,4 @@
 ﻿using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
 
@@ -18,12 +13,21 @@ namespace V_Quiz_Backend.Repository
             _collection = mongo.Database.GetCollection<Session>("Sessions");
         }
 
-        public async Task CreateSessionAsync(Session session)
+        public async Task<bool> CreateSessionAsync(Session session)
         {
-            await _collection.InsertOneAsync(session);
+            try
+            {
+                await _collection.InsertOneAsync(session);
+                return true;
+            }
+            catch
+            {
+                return false;
+
+            }
         }
 
-        public async Task <Session> GetSessionAsync(Guid sessionId)
+        public async Task<Session> GetSessionAsync(Guid sessionId)
         {
             var filter = Builders<Session>.Filter.Eq(s => s.Id, sessionId);
             return await _collection.Find(filter).FirstOrDefaultAsync();
