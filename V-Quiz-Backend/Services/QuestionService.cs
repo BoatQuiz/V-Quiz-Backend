@@ -12,6 +12,11 @@ namespace V_Quiz_Backend.Services
         public async Task<ServiceResponse<QuestionResponse>> StartQuizAsync(Guid? userId = null)
         {
             var session = await _sessionService.CreateSessionAsync(userId);
+
+            if (!session.Success || session == null || session.Data == null)
+            {
+                return ServiceResponse<QuestionResponse>.Fail("Failed to create session.");
+            }
             var question = await _repo.GetRandomQuestionAsync(session.Data.UsedQuestions);
 
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
@@ -44,18 +49,27 @@ namespace V_Quiz_Backend.Services
         public async Task<ServiceResponse<SubmitAnswerResponse>> SubmitAnswerAsync(SubmitAnswerRequest request)
         {
             var response = new ServiceResponse<SubmitAnswerResponse>();
-            var session = await _sessionService.GetSessionByIdAsync(request.SessionId);
+            var sessionResponse = await _sessionService.GetSessionByIdAsync(request.SessionId);
 
-            if (session == null)
+            if (!sessionResponse.Success || sessionResponse == null || sessionResponse.Data == null)
             {
                 return ServiceResponse<SubmitAnswerResponse>.Fail("Session not found.");
             }
 
-            if (session.Data.IsCompleted)
+            var session = sessionResponse.Data;
+
+            if (session.IsCompleted)
             {
                 return ServiceResponse<SubmitAnswerResponse>.Fail("Session is already completed.");
             }
-            var question = await GetQuestionByIdAsync(request.QuestionId);
+            var questionResponse = await GetQuestionByIdAsync(request.QuestionId);
+
+            if(!questionResponse.Success || questionResponse == null || questionResponse.Data == null)
+            {
+                return ServiceResponse<SubmitAnswerResponse>.Fail("Question not found.");
+            }
+            var question = questionResponse;
+
             if (question == null)
             {
                 return ServiceResponse<SubmitAnswerResponse>.Fail("Question not found.");
@@ -65,28 +79,28 @@ namespace V_Quiz_Backend.Services
 
             if (isCorrect)
             {
-                session.Data.NumCorrectAnswers++;
+                session.NumCorrectAnswers++;
             }
-            session.Data.NumQuestions++;
-            session.Data.UsedQuestions.Add(request.QuestionId.ToString());
+            session.NumQuestions++;
+            session.UsedQuestions.Add(request.QuestionId.ToString());
 
             var isLastQuestion = false;
-            if (session.Data.NumQuestions >= 10)
+            if (session.NumQuestions >= 10)
             {
                 isLastQuestion = true;
-                session.Data.StoppedAt = DateTime.UtcNow;
-                session.Data.IsCompleted = true;
+                session.StoppedAt = DateTime.UtcNow;
+                session.IsCompleted = true;
             }
 
-            await _sessionService.UpdateSessionAsync(session.Data);
+            await _sessionService.UpdateSessionAsync(session);
 
             response.Data = new SubmitAnswerResponse
             {
                 IsCorrect = isCorrect,
                 CorrectAnswer = question.Data.Options[question.Data.CorrectIndex],
                 IsLastQuestion = isLastQuestion,
-                Score = session.Data.NumCorrectAnswers,
-                QuestionsAnswered = session.Data.NumQuestions
+                Score = session.NumCorrectAnswers,
+                QuestionsAnswered = session.NumQuestions
             };
 
             return response;
@@ -95,6 +109,10 @@ namespace V_Quiz_Backend.Services
         public async Task<ServiceResponse<QuestionResponse>> GetNextQuestionAsync(SubmitSessionId sessionReq)
         {
             var session = await _sessionService.GetSessionByIdAsync(sessionReq.SessionId);
+            if (!session.Success || session == null || session.Data == null)
+            {
+                return ServiceResponse<QuestionResponse>.Fail("Session not found.");
+            }
             var question = await _repo.GetRandomQuestionAsync(session.Data.UsedQuestions);
 
             return ServiceResponse<QuestionResponse>.Ok(
