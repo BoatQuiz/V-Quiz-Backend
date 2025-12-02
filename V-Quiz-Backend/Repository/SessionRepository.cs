@@ -1,29 +1,28 @@
 ﻿using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Repository
 {
-    public class SessionRepository
+    public class SessionRepository(MongoDbService mongo)
     {
-        private readonly IMongoCollection<Session> _collection;
+        private readonly IMongoCollection<Session> _collection = mongo.Database.GetCollection<Session>("Sessions");
 
-        public SessionRepository(MongoDbService mongo)
+        public async Task<bool> CreateSessionAsync(Session session)
         {
-            _collection = mongo.Database.GetCollection<Session>("Sessions");
+            try
+            {
+                await _collection.InsertOneAsync(session);
+                return true;
+            }
+            catch
+            {
+                return false;
+
+            }
         }
 
-        public async Task CreateSessionAsync(Session session)
-        {
-            await _collection.InsertOneAsync(session);
-        }
-
-        public async Task <Session> GetSessionAsync(Guid sessionId)
+        public async Task<Session> GetSessionAsync(Guid sessionId)
         {
             var filter = Builders<Session>.Filter.Eq(s => s.Id, sessionId);
             return await _collection.Find(filter).FirstOrDefaultAsync();
