@@ -11,7 +11,7 @@ on:
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: 'V-Quiz-Backend' # set this to the path to your web appoject, defaults to the repository root 
-  DOTNET_VERS: '8.0.x' # set this to the dotnet version to use 
+  DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use 
 
 jobs:
   build-and-deploy: 
@@ -40,5 +40,5 @@ jobs:
         app-name: 'V-Quiz-Func' 
         slot-name: 'Production' 
         package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output' 
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_177C9C3991CB4632BF3D0E0E4E0AE62A }}
 
-publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_177C9C3991CB4632BF3D0E0E4E0AE62A }}
