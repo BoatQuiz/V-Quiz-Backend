@@ -1,44 +1,49 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action 
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+name: Build, Test and Deploy - V-Quiz-Func
 
-name: Build and deploy dotnet core app to Azure Function App - V-Quiz-Func
-  
-on: 
-  push: 
-    branches: 
+on:
+  push:
+    branches:
       - master
-  workflow_dispatch: 
+  workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'V-Quiz-Backend' # set this to the path to your web appoject, defaults to the repository root 
-  DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use 
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'V-Quiz-Backend'
+  DOTNET_VERSION: '8.0.x'
 
 jobs:
-  build-and-deploy: 
+  build-test-deploy:
     runs-on: windows-latest
     
-    steps: 
-    - name: 'Checkout GitHub Action' 
-      uses: actions/checkout@v4 
-      
-    - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment 
-      uses: actions/setup-dotnet@v1 
-      with: 
-        dotnet-version: ${{ env.DOTNET_VERSION }} 
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
 
-    - name: 'Resolve Project Dependencies Using Dotnet' 
-      shell: pwsh 
-      run: | 
-        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}' 
-        dotnet build --configuration Release --output ./output 
-        popd 
-        
-    - name: 'Run Azure Functions Action' 
-      uses: Azure/functions-action@v1 
-      id: fa 
-      with: 
-        app-name: 'V-Quiz-Func' 
-        slot-name: 'Production' 
-        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output' 
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_177C9C3991CB4632BF3D0E0E4E0AE62A }}
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      # 🔹 Restore hela solution
+      - name: Restore dependencies
+        run: dotnet restore V-Quiz.sln
+
+      # 🔹 Build solution (backend + tests)
+      - name: Build solution
+        run: dotnet build V-Quiz.sln --configuration Release --no-restore
+
+      # 🔹 Kör tester
+      - name: Run tests
+        run: dotnet test V-Quiz.sln --configuration Release --no-build
+
+      # 🔹 Publish endast Function App projektet
+      - name: Publish Function App
+        run: dotnet publish ./V-Quiz-Backend/V-Quiz-Backend.csproj -c Release -o ./publish
+
+      # 🔹 Deploy till Azure
+      - name: Deploy to Azure Function App
+        uses: Azure/functions-action@v1
+        with:
+          app-name: 'V-Quiz-Func'
+          slot-name: 'Production'
+          package: './publish'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_177C9C3991CB4632BF3D0E0E4E0AE62A }}
