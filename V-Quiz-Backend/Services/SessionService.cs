@@ -19,7 +19,7 @@ namespace V_Quiz_Backend.Services
             {
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
-                UsedQuestions = new List<string>(),
+                UsedQuestions = [],
                 NumCorrectAnswers = 0,
                 NumQuestions = 0,
                 StoppedAt = null,

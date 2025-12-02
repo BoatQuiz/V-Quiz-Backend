@@ -4,14 +4,9 @@ using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Repository
 {
-    public class SessionRepository
+    public class SessionRepository(MongoDbService mongo)
     {
-        private readonly IMongoCollection<Session> _collection;
-
-        public SessionRepository(MongoDbService mongo)
-        {
-            _collection = mongo.Database.GetCollection<Session>("Sessions");
-        }
+        private readonly IMongoCollection<Session> _collection = mongo.Database.GetCollection<Session>("Sessions");
 
         public async Task<bool> CreateSessionAsync(Session session)
         {
