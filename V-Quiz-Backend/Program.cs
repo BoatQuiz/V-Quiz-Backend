@@ -10,7 +10,7 @@ var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-// Register MongoDbService as a singleton
+// Register MongoDbService
 builder.Services.AddSingleton<MongoDbService>();
 
 // Register Repository

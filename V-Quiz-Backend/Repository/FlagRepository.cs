@@ -10,9 +10,9 @@ namespace V_Quiz_Backend.Repository
 
         private readonly IMongoCollection<FlaggedQuestion> _collection;
 
-        public FlagRepository(IMongoCollection<FlaggedQuestion> collection)
+        public FlagRepository(MongoDbService mongo)
         {
-            _collection = collection;
+            _collection = mongo.Database.GetCollection<FlaggedQuestion>("FlaggedQuestions");
         }
 
         public async Task AddFlaggedQuestionAsync(FlaggedQuestion flaggedQuestion)
