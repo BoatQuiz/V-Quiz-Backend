@@ -5,15 +5,15 @@ namespace V_Quiz_Tests
 {
     public abstract class TestBase
     {
-        protected readonly Mock<IFlagRepository> _mockFlagRepo;
-        protected readonly Mock<ISessionRepository> _mockSessionRepo;
-        protected readonly Mock<IQuestionRepository> _mockQuestionRepo;
+        protected readonly Mock<IFlagRepository> FlagRepoMock;
+        protected readonly Mock<ISessionRepository> SessionRepoMock;
+        protected readonly Mock<IQuestionRepository> QuestionRepoMock;
 
-        protected TestBase(Mock<IFlagRepository> mockFlagRepo, Mock<ISessionRepository> mockSessionRepo, Mock<IQuestionRepository> mockQuestionRepo)
+        protected TestBase()
         {
-            _mockFlagRepo = mockFlagRepo;
-            _mockSessionRepo = mockSessionRepo;
-            _mockQuestionRepo = mockQuestionRepo;
+            FlagRepoMock = new Mock<IFlagRepository>();
+            SessionRepoMock = new Mock<ISessionRepository>();
+            QuestionRepoMock = new Mock<IQuestionRepository>();
         }
     }
 }
