@@ -14,55 +14,46 @@ namespace V_Quiz_Backend.Services
             _flagRepo = flagRepo;
         }
 
-        // Denna skall bara testa min CI/CD pipeline
-        public async Task<ServiceResponse<FlaggedQuestion>> FlagQuestion(FlagQuestionRequestDto flaggedQuestion)
+        public async Task<ServiceResponse<FlaggedQuestion>> FlagQuestion(FlagRequestDto request)
         {
-            if (flaggedQuestion == null || string.IsNullOrEmpty(flaggedQuestion.QuestionId))
+            if (request == null || string.IsNullOrEmpty(request.QuestionId))
             {
-                return new ServiceResponse<FlaggedQuestion>
-                {
-                    Success = false,
-                    Message = "Invalid flagged question data."
-                };
+                return ServiceResponse<FlaggedQuestion>.Fail("Invalid flag request data.");
+            }
+
+            if (request.Reasons == null || request.Reasons.Count == 0)
+            {
+                // Denna sätter som default reason "Other" om ingen anledning anges
+                request.Reasons = [FlagReason.Other];
             }
 
             var flagEntry = new FlagEntry
             {
-                UserId = flaggedQuestion.UserId,
-                Comment = flaggedQuestion.Comment
+                UserId = request.UserId,
+                Reason = request.Reasons,
+                Comment = request.Comment,
+                FlaggedAt = DateTime.UtcNow
             };
 
-            var existingFlag = await _flagRepo.GetFlaggedQuestionByIdAsync(flaggedQuestion.QuestionId);
+            var flaggedQuestion = await _flagRepo.GetFlaggedQuestionByIdAsync(request.QuestionId);
 
             // If no existing flag entry, create a new one
-            if (existingFlag == null) 
+            if (flaggedQuestion == null) 
             {
-                var flaggedQuestionModel = new FlaggedQuestion
+                flaggedQuestion = new FlaggedQuestion
                 {
-                    QuestionId = flaggedQuestion.QuestionId,
+                    QuestionId = request.QuestionId,
                     Flags = new List<FlagEntry> { flagEntry },
                     IsResolved = false,
-                    ResolvedAt = null,
-                    ResolvedBy = null
                 };
-                await _flagRepo.AddFlaggedQuestionAsync(flaggedQuestionModel);
-                return new ServiceResponse<FlaggedQuestion>
-                {
-                    Data = flaggedQuestionModel,
-                    Success = true,
-                    Message = "Question flagged successfully."
-                };
+                await _flagRepo.AddFlaggedQuestionAsync(flaggedQuestion);
+                return ServiceResponse<FlaggedQuestion>.Ok(flaggedQuestion, "Question flagged successfully.");
             }
 
             // If an existing flag entry is found, append the new flag
-            existingFlag.Flags.Add(flagEntry);
-            await _flagRepo.UpdateFlaggedQuestionAsync(existingFlag);
-            return new ServiceResponse<FlaggedQuestion>
-            {
-                Data = existingFlag,
-                Success = true,
-                Message = "Question flagged successfully."
-            };
+            flaggedQuestion.Flags.Add(flagEntry);
+            await _flagRepo.UpdateFlaggedQuestionAsync(flaggedQuestion);
+            return ServiceResponse<FlaggedQuestion>.Ok(flaggedQuestion, "Question flagged successfully.");
         }
     }
 }

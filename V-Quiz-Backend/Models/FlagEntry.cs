@@ -10,6 +10,7 @@ namespace V_Quiz_Backend.Models
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string? UserId { get; set; }
+        public List<FlagReason> Reason { get; set; } = [];
         public string? Comment { get; set; }
         public DateTime FlaggedAt { get; set; } = DateTime.UtcNow;
 

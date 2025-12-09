@@ -10,6 +10,6 @@ namespace V_Quiz_Backend.Interface.Services
 {
     public interface IFlagService
     {
-        public Task<ServiceResponse<FlaggedQuestion>> FlagQuestion(FlagQuestionRequestDto flaggedQuestion);
+        public Task<ServiceResponse<FlaggedQuestion>> FlagQuestion(FlagRequestDto flaggedQuestion);
     }
 }
