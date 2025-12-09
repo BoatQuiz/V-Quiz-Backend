@@ -19,7 +19,7 @@ namespace V_Quiz_Tests.ServiceTests
             // Arrange
             var mockFlagRepo = new Mock<IFlagRepository>();
             var flagService = new FlagService(mockFlagRepo.Object);
-            var request = new FlagQuestionRequestDto
+            var request = new FlagRequestDto
             {
                 QuestionId = "q1",
                 UserId = "user1",
