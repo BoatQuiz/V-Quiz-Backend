@@ -6,8 +6,12 @@ using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Tests.ServiceTests
 {
-    public class QuestionServiceTests
+    public class QuestionServiceTests : TestBase
     {
+        public QuestionServiceTests(Mock<IFlagRepository> mockFlagRepo, Mock<ISessionRepository> mockSessionRepo, Mock<IQuestionRepository> mockQuestionRepo) : base(mockFlagRepo, mockSessionRepo, mockQuestionRepo)
+        {
+        }
+
         [Fact]
         public async Task SubmitAnswer_Should_ReturnCorrect_When_AnswerIsCorrect()
         {
@@ -61,6 +65,12 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.Null(result.Message);
 
 
+        }
+
+        [Fact]
+        public async Task GetRandomQuestion_Should_NotReturnUsededQuestion()
+        {
+            var service = new QuestionService(_mockQuestionRepo.Object);
         }
 
 

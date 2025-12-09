@@ -4,24 +4,23 @@ using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
 using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Models;
-using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Functions
 {
-    public class QuestionFunctions
+    public class QuizFunctions
     {
-        private readonly IQuestionService _questionService;
+        private readonly IQuizService _quizService;
 
-        public QuestionFunctions(IQuestionService questionService)
+        public QuizFunctions(IQuizService quizService)
         {
-            _questionService = questionService;
+            _quizService = quizService;
         }
 
         [Function("StartQuiz")]
         public async Task<HttpResponseData> StartQuizAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "quiz/start")] HttpRequestData req)
         {
-            var session = await _questionService.StartQuizAsync();
+            var session = await _quizService.StartQuizAsync();
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(session);
             return response;
@@ -39,7 +38,7 @@ namespace V_Quiz_Backend.Functions
                 return badRequest;
             }
 
-            var responseObj = await _questionService.SubmitAnswerAsync(request);
+            var responseObj = await _quizService.SubmitAnswerAsync(request);
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(responseObj);
             return response;
@@ -57,7 +56,7 @@ namespace V_Quiz_Backend.Functions
                 return badRequest;
             }
 
-            var responseObj = await _questionService.GetNextQuestionAsync(request);
+            var responseObj = await _quizService.GetNextQuestionAsync(request);
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(responseObj);
             return response;
