@@ -18,10 +18,12 @@ builder.Services.AddSingleton<IQuestionRepository, QuestionRepository>();
 builder.Services.AddSingleton<ISessionRepository, SessionRepository>();
 builder.Services.AddSingleton<IFlagRepository, FlagRepository>();
 
+
 // Register Service
 builder.Services.AddSingleton<IQuestionService, QuestionService>();
 builder.Services.AddSingleton<ISessionService, SessionService>();
 builder.Services.AddSingleton<IFlagService, FlagService>();
+builder.Services.AddSingleton<IQuizService, QuizService>();
 
 // Application Insights isn't enabled by default. See https://aka.ms/AAt8mw4.
 // builder.Services
