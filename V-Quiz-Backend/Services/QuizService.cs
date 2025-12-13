@@ -16,13 +16,15 @@ namespace V_Quiz_Backend.Services
         }
         public async Task<ServiceResponse<QuestionResponse>> StartQuizAsync(Guid? userId = null)
         {
-            var session = await _sessionService.CreateSessionAsync(userId);
-            if (!session.Success || session.Data == null)
+            var sessionResponse = await _sessionService.CreateSessionAsync(userId);
+            if (!sessionResponse.Success || sessionResponse.Data == null)
             {
                 return ServiceResponse<QuestionResponse>.Fail("Failed to create session.");
             }
 
-            var questionResponse = await _questionService.GetRandomQuestionAsync(session.Data.UsedQuestions);
+            var session = sessionResponse.Data;
+
+            var questionResponse = await _questionService.GetRandomQuestionAsync(session.UsedQuestions);
             if (!questionResponse.Success || questionResponse.Data == null)
             {
                 return ServiceResponse<QuestionResponse>.Fail("Failed to retrieve question.");
@@ -31,7 +33,7 @@ namespace V_Quiz_Backend.Services
             var q = questionResponse.Data;
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
             {
-                Session = new SubmitSessionId { SessionId = session.Data.Id },
+                Session = new SessionDtoResult { SessionId = session.Id, Score = session.NumCorrectAnswers, NumUsedQuestions = session.NumQuestions },
                 Question = new QuestionResponseDto
                 {
                     QuestionId = q.QuestionId,
@@ -61,7 +63,7 @@ namespace V_Quiz_Backend.Services
 
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
             {
-                Session = new SubmitSessionId { SessionId = session.Id },
+                Session = new SessionDtoResult { SessionId = session.Id, Score = session.NumCorrectAnswers, NumUsedQuestions = session.NumQuestions },
                 Question = new QuestionResponseDto
                 {
                     QuestionId = q.QuestionId,
