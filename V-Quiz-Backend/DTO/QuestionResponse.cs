@@ -9,7 +9,7 @@ namespace V_Quiz_Backend.DTO
 {
     public class QuestionResponse
     {
-        public required SubmitSessionId Session { get; set; }
+        public required SessionDtoResult Session { get; set; }
         public required QuestionResponseDto Question { get; set; }
     }
 }
