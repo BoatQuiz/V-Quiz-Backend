@@ -1,6 +1,4 @@
 ﻿using Moq;
-using V_Quiz_Backend.Interface.Repos;
-using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
 
