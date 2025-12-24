@@ -7,20 +7,13 @@ using V_Quiz_Backend.Models;
 
 namespace V_Quiz_Backend.Functions
 {
-    public class QuizFunctions
+    public class QuizFunctions(IQuizService quizService)
     {
-        private readonly IQuizService _quizService;
-
-        public QuizFunctions(IQuizService quizService)
-        {
-            _quizService = quizService;
-        }
-
         [Function("StartQuiz")]
         public async Task<HttpResponseData> StartQuizAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "quiz/start")] HttpRequestData req)
         {
-            var session = await _quizService.StartQuizAsync();
+            var session = await quizService.StartQuizAsync();
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(session);
             return response;
@@ -38,7 +31,7 @@ namespace V_Quiz_Backend.Functions
                 return badRequest;
             }
 
-            var responseObj = await _quizService.SubmitAnswerAsync(request);
+            var responseObj = await quizService.SubmitAnswerAsync(request);
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(responseObj);
             return response;
@@ -56,7 +49,7 @@ namespace V_Quiz_Backend.Functions
                 return badRequest;
             }
 
-            var responseObj = await _quizService.GetNextQuestionAsync(request);
+            var responseObj = await quizService.GetNextQuestionAsync(request);
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(responseObj);
             return response;

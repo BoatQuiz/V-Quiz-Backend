@@ -14,6 +14,8 @@ namespace V_Quiz_Backend.Services
             _sessionService = sessionService;
             _questionService = questionService;
         }
+        // Skall jag verkligen skicka in userId här?
+        // Eller jag skall nog koppla userId i sessionservicen
         public async Task<ServiceResponse<QuestionResponse>> StartQuizAsync(Guid? userId = null)
         {
             var sessionResponse = await _sessionService.CreateSessionAsync(userId);
