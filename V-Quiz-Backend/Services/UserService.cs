@@ -9,9 +9,24 @@ namespace V_Quiz_Backend.Services
 {
     public class UserService(IUserRepository repo, IPasswordHasher hasher) : IUserService
     {
-        public Task<ServiceResponse<UserId>> LoginUserAsync(LoginDto dto)
+        public async Task<ServiceResponse<UserId>> LoginUserAsync(LoginDto dto)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
+            {
+                return ServiceResponse<UserId>.Fail("Username and password cannot be empty");
+            }
+
+            var existingUser = await repo.GetUserByNameAsync(dto.Username);
+            if (existingUser == null)
+            {
+                return ServiceResponse<UserId>.Fail("Invalid username or password");
+            }
+
+            if (!hasher.Verify(dto.Password, existingUser.PasswordHash))
+            {
+                return ServiceResponse<UserId>.Fail("Invalid username or password");
+            }
+            return ServiceResponse<UserId>.Ok(new UserId { Id = existingUser.UserId }, "Login successful");
         }
 
         public async Task<ServiceResponse<UserId>> RegisterUserAsync(LoginDto dto)
