@@ -26,7 +26,7 @@ namespace V_Quiz_Backend.Services
             {
                 return ServiceResponse<UserId>.Fail("Invalid username or password");
             }
-            return ServiceResponse<UserId>.Ok(new UserId { Id = existingUser.UserId }, "Login successful");
+            return ServiceResponse<UserId>.Ok(new UserId { Id = existingUser.UserId, Username = existingUser.Username }, "Login successful");
         }
 
         public async Task<ServiceResponse<UserId>> RegisterUserAsync(LoginDto dto)

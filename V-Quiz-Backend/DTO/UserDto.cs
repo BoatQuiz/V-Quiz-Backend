@@ -9,5 +9,6 @@ namespace V_Quiz_Backend.DTO
     public class UserId
     {
         public Guid Id { get; set; }
+        public string Username { get; set; } = null!;
     }
 }
