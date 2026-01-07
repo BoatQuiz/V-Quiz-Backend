@@ -26,7 +26,7 @@ namespace V_Quiz_Backend.Models
         public DateTime? StoppedAt { get; set; } = null;
         
         [BsonElement("usedQuestions")]
-        public List<string> UsedQuestions { get; set; } = [];
+        public List<UsedQuestion> UsedQuestions { get; set; } = [];
         
         [BsonElement("numCorrectAnswers")]
         public int NumCorrectAnswers { get; set; } = 0;
@@ -36,5 +36,8 @@ namespace V_Quiz_Backend.Models
 
         [BsonElement("isCompleted")]
         public bool IsCompleted = false;
+
+        [BsonElement("currentQuestion")]
+        public CurrentQuestionState? CurrentQuestion { get; set; } = null;
     }
 }

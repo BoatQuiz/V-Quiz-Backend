@@ -22,9 +22,9 @@ namespace V_Quiz_Backend.Services
             return ServiceResponse<Question>.Ok(question);
         }
 
-        public async Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(List<string> usedQuestions)
+        public async Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(IEnumerable<string> excludedQuestionIds)
         {
-            var question = await _repo.GetRandomQuestionAsync(usedQuestions);
+            var question = await _repo.GetRandomQuestionAsync(excludedQuestionIds);
             if (question == null)
             {
                 return ServiceResponse<QuestionResponseDto>.Fail("No more questions available.");

@@ -8,6 +8,6 @@ namespace V_Quiz_Backend.Interface.Services
     {
         public Task<ServiceResponse<Question>> GetQuestionByIdAsync(string questionId);
         
-        public Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(List<string> usedQuestions);
+        public Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(IEnumerable<string> excludedQuestionIds);
     }
 }

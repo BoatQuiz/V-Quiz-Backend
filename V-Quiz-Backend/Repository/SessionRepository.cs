@@ -39,5 +39,15 @@ namespace V_Quiz_Backend.Repository
             await _collection.ReplaceOneAsync(filter, session);
         }
 
+        public async Task SetCurrentQuestionAsync(Guid sessionId, string questionId)
+        {
+            var filter = Builders<Session>.Filter.Eq(s => s.Id, sessionId);
+            var update = Builders<Session>.Update.Set(s => s.CurrentQuestion, new CurrentQuestionState
+            {
+                QuestionId = questionId,
+                AskedAtUtc = DateTime.UtcNow
+            });
+            await _collection.UpdateOneAsync(filter, update);
+        }
     }
 }

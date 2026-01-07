@@ -9,7 +9,7 @@ namespace V_Quiz_Backend.Services
         private readonly ISessionService _sessionService;
         private readonly IQuestionService _questionService;
 
-        public QuizService( ISessionService sessionService, IQuestionService questionService)
+        public QuizService(ISessionService sessionService, IQuestionService questionService)
         {
             _sessionService = sessionService;
             _questionService = questionService;
@@ -26,16 +26,25 @@ namespace V_Quiz_Backend.Services
 
             var session = sessionResponse.Data;
 
-            var questionResponse = await _questionService.GetRandomQuestionAsync(session.UsedQuestions);
+            var questionResponse = await _questionService.GetRandomQuestionAsync(
+                excludedQuestionIds: session.UsedQuestions.Select(q => q.QuestionId));
             if (!questionResponse.Success || questionResponse.Data == null)
             {
                 return ServiceResponse<QuestionResponse>.Fail("Failed to retrieve question.");
             }
 
             var q = questionResponse.Data;
+
+            await _sessionService.SetCurrentQuestionAsync(session.Id, q.QuestionId);
+
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
             {
-                Session = new SessionDtoResult { SessionId = session.Id, Score = session.NumCorrectAnswers, NumUsedQuestions = session.NumQuestions },
+                Session = new SessionDtoResult
+                {
+                    SessionId = session.Id,
+                    Score = session.NumCorrectAnswers,
+                    NumUsedQuestions = session.NumQuestions
+                },
                 Question = new QuestionResponseDto
                 {
                     QuestionId = q.QuestionId,
@@ -55,7 +64,7 @@ namespace V_Quiz_Backend.Services
 
             var session = sessionResponse.Data;
 
-            var questionResponse = await _questionService.GetRandomQuestionAsync(session.UsedQuestions);
+            var questionResponse = await _questionService.GetRandomQuestionAsync(excludedQuestionIds: session.UsedQuestions.Select(q => q.QuestionId));
             if (!questionResponse.Success || questionResponse.Data == null)
             {
                 return ServiceResponse<QuestionResponse>.Fail("Failed to retrieve question.");
@@ -104,7 +113,8 @@ namespace V_Quiz_Backend.Services
                 session.NumCorrectAnswers++;
             }
             session.NumQuestions++;
-            session.UsedQuestions.Add(question.QuestionId);
+            // TODO: Fix used questions tracking
+            //session.UsedQuestions.Add(question.QuestionId);
 
             bool isLastQuestion = false;
             if (session.NumQuestions >= 10)

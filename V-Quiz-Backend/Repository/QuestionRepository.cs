@@ -30,9 +30,9 @@ namespace V_Quiz_Backend.Repository
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
-        public async Task<Question> GetRandomQuestionAsync(List<string> usedQuestions)
+        public async Task<Question> GetRandomQuestionAsync(IEnumerable<string> excludedQuestionIds)
         {
-            var filter = Builders<Question>.Filter.Nin(p => p.QuestionId, usedQuestions);
+            var filter = Builders<Question>.Filter.Nin(p => p.QuestionId, excludedQuestionIds);
 
             return await _collection.Aggregate()
                 .Match(filter)

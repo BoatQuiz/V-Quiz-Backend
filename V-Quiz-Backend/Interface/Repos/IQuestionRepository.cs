@@ -12,6 +12,6 @@ namespace V_Quiz_Backend.Interface.Repos
         public Task <List<Question>> GetAllQuestionsAsync();
         public Task <int> GetQuestionCountAsync();
         public Task <Question> GetQuestionByIdAsync(string questionId);
-        public Task <Question> GetRandomQuestionAsync(List<string> usedQuestions);
+        public Task <Question> GetRandomQuestionAsync(IEnumerable<string> excludedQuestionIds);
     }
 }
