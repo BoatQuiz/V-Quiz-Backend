@@ -16,7 +16,7 @@ namespace V_Quiz_Backend.Services
             {
                 UserId = userId,
                 CreatedAt = DateTime.UtcNow,
-                UsedQuestions = [],
+                
                 NumCorrectAnswers = 0,
                 NumQuestions = 0,
                 StoppedAt = null,
@@ -62,6 +62,24 @@ namespace V_Quiz_Backend.Services
             {
                 return ServiceResponse<bool>.Fail("Failed to update session: " + ex.Message);
 
+            }
+        }
+
+        public async Task<ServiceResponse<bool>> SetCurrentQuestionAsync(Guid sessionId, string currentQuestionId)
+        {
+            try
+            {
+                var question = new CurrentQuestionState
+                {
+                    QuestionId = currentQuestionId,
+                    AskedAtUtc = DateTime.UtcNow,
+                };
+                await _repo.SetCurrentQuestionAsync(sessionId, question);
+                return ServiceResponse<bool>.Ok(true, "Current question set successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResponse<bool>.Fail("Failed to set current question: " + ex.Message);
             }
         }
     }

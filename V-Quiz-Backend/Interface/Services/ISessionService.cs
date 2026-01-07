@@ -7,5 +7,6 @@ namespace V_Quiz_Backend.Interface.Services
         Task<ServiceResponse<Session>> CreateSessionAsync(Guid? userId = null);
         Task<ServiceResponse<Session>> GetSessionByIdAsync(Guid sessionId);
         Task<ServiceResponse<bool>> UpdateSessionAsync(Session session);
+        Task<ServiceResponse<bool>> SetCurrentQuestionAsync(Guid sessionId, string questionId);
     }
 }
