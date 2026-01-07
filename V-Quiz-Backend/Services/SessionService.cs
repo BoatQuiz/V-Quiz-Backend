@@ -69,7 +69,12 @@ namespace V_Quiz_Backend.Services
         {
             try
             {
-                await _repo.SetCurrentQuestionAsync(sessionId, currentQuestionId);
+                var question = new CurrentQuestionState
+                {
+                    QuestionId = currentQuestionId,
+                    AskedAtUtc = DateTime.UtcNow,
+                };
+                await _repo.SetCurrentQuestionAsync(sessionId, question);
                 return ServiceResponse<bool>.Ok(true, "Current question set successfully.");
             }
             catch (Exception ex)

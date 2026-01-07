@@ -113,5 +113,45 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.False(result.Success);
             Assert.Equal("Failed to update session: DB error", result.Message);
         }
+
+        [Fact]
+        public async Task SetCurrentQuestionAsync_Should_UpdateCurrentQuestion()
+        {
+            // Arrange
+            var sessionId = Guid.NewGuid();
+            var question = new CurrentQuestionState
+            {
+                QuestionId = "q23",
+                AskedAtUtc = DateTime.UtcNow
+            };
+
+            SessionRepoMock
+                .Setup(r => r.SetCurrentQuestionAsync(sessionId, question));
+            var service = new SessionService(SessionRepoMock.Object);
+
+            // Act
+            var result = await service.SetCurrentQuestionAsync(sessionId, question.QuestionId);
+
+            // Assert
+            Assert.True(result.Success);
+            Assert.Equal("Current question set successfully.", result.Message);
+        }
+
+        [Fact]
+        public async Task SetCurrentQuestionAsync_Should_ReturnFail_WhenExceptionThrown()
+        {
+            // Arrange
+            var sessionId = Guid.NewGuid();
+            var questionId = "q23";
+            SessionRepoMock
+                .Setup(r => r.SetCurrentQuestionAsync(sessionId, It.IsAny<CurrentQuestionState>()))
+                .ThrowsAsync(new Exception("DB error"));
+            var service = new SessionService(SessionRepoMock.Object);
+            // Act
+            var result = await service.SetCurrentQuestionAsync(sessionId, questionId);
+            // Assert
+            Assert.False(result.Success);
+            Assert.Equal("Failed to set current question: DB error", result.Message);
+        }
     }
 }
