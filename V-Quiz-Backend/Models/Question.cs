@@ -18,10 +18,10 @@ namespace V_Quiz_Backend.Models
         public string QuestionId { get; set; } = string.Empty;
 
         [BsonElement("category")]
-        public string? Category { get; set; } = null;
+        public string Category { get; set; } = string.Empty;
 
         [BsonElement("difficulty")]
-        public string? Difficulty { get; set; } = null;
+        public int Difficulty { get; set; } 
 
         [BsonElement("text")]
         public string Text { get; set; } = string.Empty;
