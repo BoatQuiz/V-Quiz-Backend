@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using V_Quiz_Backend.DTO;
 using V_Quiz_Backend.Interface.Repos;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
@@ -45,6 +46,20 @@ namespace V_Quiz_Backend.Repository
             var update = Builders<Session>.Update.Set(s => s.CurrentQuestion, question);
             
             await _collection.UpdateOneAsync(filter, update);
+        }
+
+        public async Task<SessionIdentity?> GetUserIdBySessionIdAsync(Guid sessionId)
+        {
+            return await _collection
+                .Find(s => s.Id == sessionId)
+                .Project(s => new SessionIdentity
+                {
+                    SessionId = s.Id,
+                    UserId = s.UserId,
+                    // TODO: Koppla på användarnamn när användarmodellen är klar
+                    //UserName = s.UserName
+                })
+                .FirstOrDefaultAsync();
         }
     }
 }

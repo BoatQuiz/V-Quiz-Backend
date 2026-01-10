@@ -1,4 +1,5 @@
-﻿using V_Quiz_Backend.Interface.Repos;
+﻿using V_Quiz_Backend.DTO;
+using V_Quiz_Backend.Interface.Repos;
 using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Repository;
@@ -81,6 +82,21 @@ namespace V_Quiz_Backend.Services
             {
                 return ServiceResponse<bool>.Fail("Failed to set current question: " + ex.Message);
             }
+        }
+
+        public async Task<ServiceResponse<SessionIdentity>> GetUserIdBySessionIdAsync(Guid sessionId)
+        {
+            if (sessionId == Guid.Empty)
+            {
+                return ServiceResponse<SessionIdentity>.Fail("Invalid session ID.");
+            }
+
+            var userId = await _repo.GetUserIdBySessionIdAsync(sessionId);
+            if (userId == null)
+            {
+                return ServiceResponse<SessionIdentity>.Fail("Session not found.");
+            }
+            return ServiceResponse<SessionIdentity>.Ok(userId);
         }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using System.Net;
+using V_Quiz_Backend.DTO;
 using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Models;
 
@@ -11,9 +12,18 @@ namespace V_Quiz_Backend.Functions
     {
         [Function("StartQuiz")]
         public async Task<HttpResponseData> StartQuizAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "quiz/start")] HttpRequestData req)
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "quiz/start")] HttpRequestData req)
         {
-            var session = await quizService.StartQuizAsync();
+            StartQuizRequest? body = null;
+
+            if (req.Body != null)
+            {
+                body = await req.ReadFromJsonAsync<StartQuizRequest>();
+            }
+
+            var userId = body?.UserId;
+
+            var session = await quizService.StartQuizAsync(userId);
             var response = req.CreateResponse(HttpStatusCode.OK);
             await response.WriteAsJsonAsync(session);
             return response;

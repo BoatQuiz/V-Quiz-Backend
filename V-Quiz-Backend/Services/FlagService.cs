@@ -5,13 +5,15 @@ using V_Quiz_Backend.Models;
 
 namespace V_Quiz_Backend.Services
 {
-    public class FlagService : IFlagService 
+    public class FlagService : IFlagService
     {
         private readonly IFlagRepository _flagRepo;
+        private readonly ISessionService _sessionService;
 
-        public FlagService(IFlagRepository flagRepo)
+        public FlagService(IFlagRepository flagRepo, ISessionService sessionService)
         {
             _flagRepo = flagRepo;
+            _sessionService = sessionService;
         }
 
         public async Task<ServiceResponse<FlaggedQuestion>> FlagQuestion(FlagRequestDto request)
@@ -27,9 +29,12 @@ namespace V_Quiz_Backend.Services
                 request.Reasons = [FlagReason.Other];
             }
 
+            var userId = await _sessionService.GetUserIdBySessionIdAsync(request.SessionId);
+            
+
             var flagEntry = new FlagEntry
             {
-                UserId = request.UserId,
+                UserId = userId.Data?.UserId,
                 Reason = request.Reasons,
                 Comment = request.Comment,
                 FlaggedAt = DateTime.UtcNow
@@ -38,7 +43,7 @@ namespace V_Quiz_Backend.Services
             var flaggedQuestion = await _flagRepo.GetFlaggedQuestionByIdAsync(request.QuestionId);
 
             // If no existing flag entry, create a new one
-            if (flaggedQuestion == null) 
+            if (flaggedQuestion == null)
             {
                 flaggedQuestion = new FlaggedQuestion
                 {

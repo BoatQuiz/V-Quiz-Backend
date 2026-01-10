@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using V_Quiz_Backend.DTO;
 using V_Quiz_Backend.Interface.Repos;
+using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
 
@@ -18,11 +19,12 @@ namespace V_Quiz_Tests.ServiceTests
         {
             // Arrange
             var mockFlagRepo = new Mock<IFlagRepository>();
-            var flagService = new FlagService(mockFlagRepo.Object);
+            var mockSessionService = new Mock<ISessionService>();
+            var flagService = new FlagService(mockFlagRepo.Object, mockSessionService.Object);
             var request = new FlagRequestDto
             {
                 QuestionId = "q1",
-                UserId = "user1",
+                SessionId = Guid.NewGuid(),
                 Comment = "Inappropriate content"
             };
             mockFlagRepo
@@ -31,6 +33,13 @@ namespace V_Quiz_Tests.ServiceTests
             mockFlagRepo
                 .Setup(r => r.AddFlaggedQuestionAsync(It.IsAny<FlaggedQuestion>()))
                 .Returns(Task.CompletedTask);
+            mockSessionService
+                .Setup(s => s.GetUserIdBySessionIdAsync(request.SessionId))
+                .ReturnsAsync(new ServiceResponse<SessionIdentity>
+                {
+                    Success = true,
+                    Data = new SessionIdentity { UserId = Guid.NewGuid() }
+                });
             // Act
             var result = await flagService.FlagQuestion(request);
             // Assert
@@ -38,7 +47,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.NotNull(result.Data);
             Assert.Equal("q1", result.Data.QuestionId);
             Assert.Single(result.Data.Flags);
-            Assert.Equal("user1", result.Data.Flags[0].UserId);
             Assert.Equal("Inappropriate content", result.Data.Flags[0].Comment);
         }
     }

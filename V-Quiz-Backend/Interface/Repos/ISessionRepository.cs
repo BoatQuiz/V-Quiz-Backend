@@ -1,4 +1,5 @@
-﻿using V_Quiz_Backend.Models;
+﻿using V_Quiz_Backend.DTO;
+using V_Quiz_Backend.Models;
 
 namespace V_Quiz_Backend.Interface.Repos
 {
@@ -8,5 +9,6 @@ namespace V_Quiz_Backend.Interface.Repos
         public Task<Session> GetSessionAsync(Guid sessionId);
         public Task UpdateSessionAsync(Session session);
         public Task SetCurrentQuestionAsync(Guid sessionId, CurrentQuestionState question);
+        public Task<SessionIdentity> GetUserIdBySessionIdAsync(Guid sessionId);
     }
 }

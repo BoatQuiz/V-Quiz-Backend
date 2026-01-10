@@ -11,7 +11,7 @@ namespace V_Quiz_Backend.DTO
     {
         public string QuestionId { get; set; } = null!;
         public List<FlagReason> Reasons { get; set; } = new ();
-        public string? UserId { get; set; }
+        public Guid SessionId { get; set; }
         public string? Comment { get; set; }
     }
 }
