@@ -140,7 +140,7 @@ namespace V_Quiz_Backend.Services
             bool isLastQuestion = false;
             // Denna styr hur många frågor en quiz har
             // Skulle kunna ändra detta så att en spelare kan välja själv
-            if (session.NumQuestions >= 11)
+            if (session.NumQuestions >= 10)
             {
                 session.IsCompleted = true;
                 isLastQuestion = true;
