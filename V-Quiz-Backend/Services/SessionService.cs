@@ -2,7 +2,6 @@
 using V_Quiz_Backend.Interface.Repos;
 using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Models;
-using V_Quiz_Backend.Repository;
 
 namespace V_Quiz_Backend.Services
 {
@@ -10,18 +9,19 @@ namespace V_Quiz_Backend.Services
     {
         private readonly ISessionRepository _repo = repo;
 
-        public async Task<ServiceResponse<Session>> CreateSessionAsync(Guid? userId = null)
+        public async Task<ServiceResponse<Session>> CreateSessionAsync(Guid? userId = null, int targetQuestionsCount = 10, List<string>? allowedCategories = null)
         {
 
             var session = new Session
             {
                 UserId = userId,
-                CreatedAt = DateTime.UtcNow,
+                StartedAtUtc = DateTime.UtcNow,
                 
-                NumCorrectAnswers = 0,
-                NumQuestions = 0,
-                StoppedAt = null,
-                IsCompleted = false
+                TargetQuestionCount = targetQuestionsCount,
+                AllowedCategories = allowedCategories,
+
+                CurrentQuestion = null,
+                UsedQuestions = new List<UsedQuestion>(),
             };
 
             try
@@ -97,6 +97,13 @@ namespace V_Quiz_Backend.Services
                 return ServiceResponse<SessionIdentity>.Fail("Session not found.");
             }
             return ServiceResponse<SessionIdentity>.Ok(userId);
+        }
+
+        public async Task AppendAnsweredQuestionAsync(Session session, UsedQuestion usedQuestion)
+        {
+            bool endSession = session.UsedQuestions.Count + 1 >= session.TargetQuestionCount;
+
+            await _repo.AppendUsedQuestionAsync(session.Id, usedQuestion, endSession);
         }
     }
 }

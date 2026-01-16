@@ -18,7 +18,12 @@ namespace V_Quiz_Backend.Services
         // Eller jag skall nog koppla userId i sessionservicen
         public async Task<ServiceResponse<QuestionResponse>> StartQuizAsync(Guid? userId = null)
         {
-            var sessionResponse = await _sessionService.CreateSessionAsync(userId);
+            // 1. Skapa session
+            var sessionResponse = await _sessionService.CreateSessionAsync(
+                userId: userId,
+                targetQuestionsCount: 10,
+                allowedCategories: null);
+
             if (!sessionResponse.Success || sessionResponse.Data == null)
             {
                 return ServiceResponse<QuestionResponse>.Fail("Failed to create session.");
@@ -26,8 +31,11 @@ namespace V_Quiz_Backend.Services
 
             var session = sessionResponse.Data;
 
+            // 2. Hämta första frågan(Inga exkluderingar eftersom det är första frågan)
             var questionResponse = await _questionService.GetRandomQuestionAsync(
-                excludedQuestionIds: session.UsedQuestions.Select(q => q.QuestionId));
+                excludedQuestionIds: Enumerable.Empty<string>(),
+                allowedCategories: session.AllowedCategories);
+
             if (!questionResponse.Success || questionResponse.Data == null)
             {
                 return ServiceResponse<QuestionResponse>.Fail("Failed to retrieve question.");
@@ -35,15 +43,17 @@ namespace V_Quiz_Backend.Services
 
             var q = questionResponse.Data;
 
+            // 3. Sätt nuvarande fråga i sessionen 
             await _sessionService.SetCurrentQuestionAsync(session.Id, q.QuestionId);
 
+            // 4. Returnera minimal payload med session och fråga
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
             {
                 Session = new SessionDtoResult
                 {
                     SessionId = session.Id,
-                    Score = session.NumCorrectAnswers,
-                    NumUsedQuestions = session.NumQuestions
+                    QuestionsAnswered = 0,
+                    TargetQuestionCount = session.TargetQuestionCount
                 },
                 Question = new QuestionResponseDto
                 {
@@ -56,7 +66,7 @@ namespace V_Quiz_Backend.Services
 
         public async Task<ServiceResponse<QuestionResponse>> GetNextQuestionAsync(SubmitSessionId sessionReq)
         {
-            // Hämta nuvarande session
+            // 1. Hämta session
             var sessionResponse = await _sessionService.GetSessionByIdAsync(sessionReq.SessionId);
             if (!sessionResponse.Success || sessionResponse.Data == null)
             {
@@ -65,8 +75,26 @@ namespace V_Quiz_Backend.Services
 
             var session = sessionResponse.Data;
 
-            // Hämta en ny fråga som inte har använts i sessionen
-            var questionResponse = await _questionService.GetRandomQuestionAsync(excludedQuestionIds: session.UsedQuestions.Select(q => q.QuestionId));
+            // 2. Kolla om session inte är avslutad
+            if (session.EndedAtUtc != null)
+            {
+                return ServiceResponse<QuestionResponse>.Fail("Session is already completed.");
+            }
+
+            // 3. Blockera om en fråga redan är aktiv
+            if (session.CurrentQuestion != null)
+            {
+                return ServiceResponse<QuestionResponse>.Fail("There is already an active question.");
+            }
+
+            // 4. Hämta nästa fråga
+            var excludedIds = session.UsedQuestions.Select(q => q.QuestionId);
+
+
+            var questionResponse = await _questionService.GetRandomQuestionAsync(
+                excludedQuestionIds: excludedIds,
+                allowedCategories: session.AllowedCategories);
+
             if (!questionResponse.Success || questionResponse.Data == null)
             {
                 return ServiceResponse<QuestionResponse>.Fail("Failed to retrieve question.");
@@ -74,11 +102,18 @@ namespace V_Quiz_Backend.Services
 
             var q = questionResponse.Data;
 
+            // 5. Sätt nuvarande fråga i sessionen + starttid
             await _sessionService.SetCurrentQuestionAsync(session.Id, q.QuestionId);
 
+            // 6. Returnera minimal payload med session och fråga
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
             {
-                Session = new SessionDtoResult { SessionId = session.Id, Score = session.NumCorrectAnswers, NumUsedQuestions = session.NumQuestions },
+                Session = new SessionDtoResult
+                {
+                    SessionId = session.Id,
+                    QuestionsAnswered = session.UsedQuestions.Count,
+                    TargetQuestionCount = session.TargetQuestionCount
+                },
                 Question = new QuestionResponseDto
                 {
                     QuestionId = q.QuestionId,
@@ -90,6 +125,7 @@ namespace V_Quiz_Backend.Services
 
         public async Task<ServiceResponse<SubmitAnswerResponse>> SubmitAnswerAsync(SubmitAnswerRequest request)
         {
+            // 1. Hämta session
             var sessionResponse = await _sessionService.GetSessionByIdAsync(request.SessionId);
             if (!sessionResponse.Success || sessionResponse.Data == null)
             {
@@ -97,11 +133,19 @@ namespace V_Quiz_Backend.Services
             }
             var session = sessionResponse.Data;
 
-            if (session.IsCompleted)
+            // 2. Kolla om session inte är avslutad
+            if (session.EndedAtUtc != null)
             {
                 return ServiceResponse<SubmitAnswerResponse>.Fail("Session is already completed.");
             }
 
+            // 3. Kontroller att frågan är aktiv
+            if (session.CurrentQuestion == null || session.CurrentQuestion.QuestionId != request.QuestionId)
+            {
+                return ServiceResponse<SubmitAnswerResponse>.Fail("No active question.");
+            }
+
+            // 4. Hämta fråga
             var questionResponse = await _questionService.GetQuestionByIdAsync(request.QuestionId);
             if (!questionResponse.Success || questionResponse.Data == null)
             {
@@ -110,52 +154,36 @@ namespace V_Quiz_Backend.Services
 
             var question = questionResponse.Data;
 
+            // 5. Kontrollera svaret + tid
             bool isCorrect = request.SelectedAnswer == question.CorrectIndex;
 
-            if (session.CurrentQuestion == null || session.CurrentQuestion.QuestionId != request.QuestionId)
-            {
-                return ServiceResponse<SubmitAnswerResponse>.Fail("No active question");
-            }
+            var timeMs = (DateTime.UtcNow - session.CurrentQuestion.AskedAtUtc).TotalMilliseconds;
 
-            var now = DateTime.UtcNow;
-            var timeMs = (now - session.CurrentQuestion.AskedAtUtc).TotalMilliseconds;
-
-
-            if (isCorrect)
-            {
-                session.NumCorrectAnswers++;
-            }
-            session.NumQuestions++;
-            session.UsedQuestions.Add(new UsedQuestion
+            // 6. Skapa UsedQuestion
+            var usedQuestion = new UsedQuestion
             {
                 QuestionId = question.QuestionId,
-                Category = "",
+                Category = question.Category,
                 AnsweredCorrectly = isCorrect,
                 TimeMs = timeMs
+            };
 
-            });
+            // 7. Skriv till databasen
+            bool isLastQuestion = session.UsedQuestions.Count >= session.TargetQuestionCount;
 
-            session.CurrentQuestion = null;
+            await _sessionService.AppendAnsweredQuestionAsync(session, usedQuestion);
 
-            bool isLastQuestion = false;
-            // Denna styr hur många frågor en quiz har
-            // Skulle kunna ändra detta så att en spelare kan välja själv
-            if (session.NumQuestions >= 10)
-            {
-                session.IsCompleted = true;
-                isLastQuestion = true;
-                session.StoppedAt = DateTime.UtcNow;
-            }
 
-            await _sessionService.UpdateSessionAsync(session);
-
+            // 10. Returnera svar
             return ServiceResponse<SubmitAnswerResponse>.Ok(new SubmitAnswerResponse
             {
                 IsCorrect = isCorrect,
                 CorrectIndex = question.CorrectIndex,
                 CorrectAnswer = question.Options[question.CorrectIndex],
-                QuestionsAnswered = session.NumQuestions,
-                Score = session.NumCorrectAnswers,
+
+                QuestionsAnswered = session.UsedQuestions.Count + 1,
+                Score = session.UsedQuestions.Count(q => q.AnsweredCorrectly) + (isCorrect ? 1 : 0),
+
                 IsLastQuestion = isLastQuestion
             });
         }

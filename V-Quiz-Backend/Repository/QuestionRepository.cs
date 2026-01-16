@@ -1,18 +1,21 @@
-﻿using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using V_Quiz_Backend.Interface.Repos;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Repository
 {
-    public class QuestionRepository(MongoDbService mongo) : IQuestionRepository
+    public class QuestionRepository : IQuestionRepository
     {
-        private readonly IMongoCollection<Question> _collection = mongo.Database.GetCollection<Question>("Questions");
+        private readonly IMongoCollection<Question> _collection;
+        private readonly ILogger<QuestionRepository> _logger;
+
+        public QuestionRepository(MongoDbService mongoDbService, ILogger<QuestionRepository> logger)
+        {
+            _collection = mongoDbService.Database.GetCollection<Question>("Questions");
+            _logger = logger;
+        }
 
         public async Task<List<Question>> GetAllQuestionsAsync()
         {
@@ -24,21 +27,38 @@ namespace V_Quiz_Backend.Repository
             return (int)await _collection.CountDocumentsAsync(_ => true);
         }
 
-        public async Task <Question> GetQuestionByIdAsync(string questionId)
+        public async Task<Question> GetQuestionByIdAsync(string questionId)
         {
             var filter = Builders<Question>.Filter.Eq(q => q.QuestionId, questionId);
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
-        public async Task<Question> GetRandomQuestionAsync(IEnumerable<string> excludedQuestionIds)
+        public async Task<Question> GetRandomQuestionAsync(
+            IEnumerable<string> excludedQuestionIds,
+            IEnumerable<string>? allowedCategories)
         {
-            var filter = Builders<Question>.Filter.Nin(p => p.QuestionId, excludedQuestionIds);
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            var filterBuilder = Builders<Question>.Filter;
 
-            return await _collection.Aggregate()
+            var filter = filterBuilder.Nin(q => q.QuestionId, excludedQuestionIds);
+
+            if (allowedCategories != null && allowedCategories.Any())
+            {
+                filter &= filterBuilder.In(q => q.Category, allowedCategories);
+            }
+
+            var question = await _collection
+                .Aggregate()
                 .Match(filter)
                 .Sample(1)
                 .FirstOrDefaultAsync();
+
+            sw.Stop();
+
+            _logger.LogDebug("GetRandomQuestionAsync DB query took {ElapsedMs} ms", sw.ElapsedMilliseconds);
+
+            return question;
         }
-            
+
     }
 }

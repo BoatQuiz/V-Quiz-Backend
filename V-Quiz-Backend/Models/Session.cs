@@ -1,10 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace V_Quiz_Backend.Models
 {
@@ -14,30 +9,29 @@ namespace V_Quiz_Backend.Models
         [BsonRepresentation(BsonType.String)]
         public Guid Id { get; set; } = Guid.NewGuid();
 
+        //Metadata
         [BsonElement("userId")]
         [BsonRepresentation(BsonType.String)]
         public Guid? UserId { get; set; }
         
-        [BsonElement("createdAt")]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [BsonElement("startedAtUtc")]
+        public DateTime StartedAtUtc { get; set; } = DateTime.UtcNow;
         
-        [BsonElement("stoppedAt")]
+        [BsonElement("endedAtUtc")]
         [BsonIgnoreIfNull]
-        public DateTime? StoppedAt { get; set; } = null;
-        
-        [BsonElement("usedQuestions")]
-        public List<UsedQuestion> UsedQuestions { get; set; } = [];
-        
-        [BsonElement("numCorrectAnswers")]
-        public int NumCorrectAnswers { get; set; } = 0;
-        
-        [BsonElement("numQuestions")]
-        public int NumQuestions { get; set; } = 0;
+        public DateTime? EndedAtUtc { get; set; } 
 
-        [BsonElement("isCompleted")]
-        public bool IsCompleted = false;
+        [BsonElement("targetQuestionCount")]
+        public int TargetQuestionCount { get; set; }
+
+        [BsonElement("allowedCategories")]
+        [BsonIgnoreIfNull]
+        public List<string>? AllowedCategories { get; set; }
 
         [BsonElement("currentQuestion")]
         public CurrentQuestionState? CurrentQuestion { get; set; } = null;
+
+        [BsonElement("usedQuestions")]
+        public List<UsedQuestion> UsedQuestions { get; set; } = [];       
     }
 }
