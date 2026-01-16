@@ -22,21 +22,23 @@ namespace V_Quiz_Backend.Services
             return ServiceResponse<Question>.Ok(question);
         }
 
-        public async Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(IEnumerable<string> excludedQuestionIds)
+        public async Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(
+            IEnumerable<string> excludedQuestionIds, 
+            IEnumerable<string>? allowedCategories = null)
         {
-            var question = await _repo.GetRandomQuestionAsync(excludedQuestionIds);
+            var question = await _repo.GetRandomQuestionAsync(excludedQuestionIds, allowedCategories);
+            
             if (question == null)
             {
                 return ServiceResponse<QuestionResponseDto>.Fail("No more questions available.");
             }
-            var questionResponse = new QuestionResponseDto
+            
+            return ServiceResponse<QuestionResponseDto>.Ok(new QuestionResponseDto
             {
                 QuestionId = question.QuestionId,
                 QuestionText = question.Text,
                 Options = question.Options
-            };
-            
-            return ServiceResponse<QuestionResponseDto>.Ok(questionResponse);
+            });
         }
     }
 }

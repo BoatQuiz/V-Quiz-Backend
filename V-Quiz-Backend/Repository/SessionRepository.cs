@@ -61,5 +61,23 @@ namespace V_Quiz_Backend.Repository
                 })
                 .FirstOrDefaultAsync();
         }
+
+        public async Task AppendUsedQuestionAsync(Guid sessionId, UsedQuestion usedQuestion, bool endSession)
+        {
+            var filter = Builders<Session>.Filter.Eq(s => s.Id, sessionId);
+            var updates = new List<UpdateDefinition<Session>>
+            {
+                Builders<Session>.Update.Push(s => s.UsedQuestions, usedQuestion),
+                Builders<Session>.Update.Set(s => s.CurrentQuestion, null)
+            };
+
+            if (endSession)
+            {
+                updates.Add(Builders<Session>.Update.Set(s => s.EndedAtUtc, DateTime.UtcNow));
+            }
+
+            var update = Builders<Session>.Update.Combine(updates);
+            await _collection.UpdateOneAsync(filter, update);
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace V_Quiz_Backend.Interface.Repos
         public Task UpdateSessionAsync(Session session);
         public Task SetCurrentQuestionAsync(Guid sessionId, CurrentQuestionState question);
         public Task<SessionIdentity> GetUserIdBySessionIdAsync(Guid sessionId);
+        public Task AppendUsedQuestionAsync(Guid sessionId, UsedQuestion usedQuestion, bool endSession);
     }
 }
