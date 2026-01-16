@@ -56,11 +56,15 @@ namespace V_Quiz_Tests.ServiceTests
                 QuestionId = "q2",
                 Text = "Capital of Sweden?",
                 Options = ["Stockholm", "Oslo"],
-                CorrectIndex = 0
+                CorrectIndex = 0,
+                Category = "Geography",
             };
 
             QuestionRepoMock
-                .Setup(r => r.GetRandomQuestionAsync(It.IsAny<List<string>>()))
+                .Setup(r => r.GetRandomQuestionAsync(
+                    It.IsAny<IEnumerable<string>>(), 
+                    It.IsAny<IEnumerable<string>?>()
+                ))
                 .ReturnsAsync(question);
 
             var service = new QuestionService(QuestionRepoMock.Object);
@@ -78,7 +82,10 @@ namespace V_Quiz_Tests.ServiceTests
         {
             // Arrange
             QuestionRepoMock
-                .Setup(r => r.GetRandomQuestionAsync(It.IsAny<List<string>>()))
+                .Setup(r => r.GetRandomQuestionAsync(
+                    It.IsAny<IEnumerable<string>>(),
+                    It.IsAny<IEnumerable<string>?>()
+                    ))
                 .ReturnsAsync((Question?)null);
 
             var service = new QuestionService(QuestionRepoMock.Object);

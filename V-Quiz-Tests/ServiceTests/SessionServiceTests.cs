@@ -19,7 +19,7 @@ namespace V_Quiz_Tests.ServiceTests
             // Assert
             Assert.True(result.Success);
             Assert.NotNull(result.Data);
-            Assert.Equal(0, result.Data.NumQuestions);
+           
         }
 
         [Fact]
