@@ -57,7 +57,7 @@ namespace V_Quiz_Tests.ServiceTests
                 Text = "Capital of Sweden?",
                 Options = ["Stockholm", "Oslo"],
                 CorrectIndex = 0,
-                Category = "Geography",
+                Category = ["Geography"]
             };
 
             QuestionRepoMock
