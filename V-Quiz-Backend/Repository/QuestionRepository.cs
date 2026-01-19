@@ -44,7 +44,7 @@ namespace V_Quiz_Backend.Repository
 
             if (allowedCategories != null && allowedCategories.Any())
             {
-                filter &= filterBuilder.In(q => q.Category, allowedCategories);
+                filter &= filterBuilder.AnyIn(q => q.Category, allowedCategories);
             }
 
             var question = await _collection

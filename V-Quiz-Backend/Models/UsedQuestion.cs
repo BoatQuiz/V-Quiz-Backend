@@ -9,7 +9,7 @@ namespace V_Quiz_Backend.Models
     public class UsedQuestion
     {
         public string QuestionId { get; set; } = string.Empty;
-        public string Category { get; set; } = "";
+        public List<string>? Category { get; set; } 
         public bool AnsweredCorrectly { get; set; } = false;
         
         // Backend-only messuring
