@@ -9,11 +9,10 @@ namespace V_Quiz_Backend.Models
         [BsonRepresentation(BsonType.String)]
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        //Metadata
-        [BsonElement("userId")]
-        [BsonRepresentation(BsonType.String)]
-        public Guid? UserId { get; set; }
-        
+        [BsonElement("player")]
+        public SessionUser Player { get; set; } = null!;
+
+        //Metadata        
         [BsonElement("startedAtUtc")]
         public DateTime StartedAtUtc { get; set; } = DateTime.UtcNow;
         
@@ -23,10 +22,6 @@ namespace V_Quiz_Backend.Models
 
         [BsonElement("targetQuestionCount")]
         public int TargetQuestionCount { get; set; }
-
-        [BsonElement("allowedCategories")]
-        [BsonIgnoreIfNull]
-        public List<string>? AllowedCategories { get; set; }
 
         [BsonElement("currentQuestion")]
         public CurrentQuestionState? CurrentQuestion { get; set; } = null;

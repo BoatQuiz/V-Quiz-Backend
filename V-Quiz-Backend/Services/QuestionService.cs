@@ -23,7 +23,7 @@ namespace V_Quiz_Backend.Services
         }
 
         public async Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(
-            IEnumerable<string> excludedQuestionIds, 
+            IEnumerable<string> excludedQuestionIds,
             IEnumerable<string>? allowedCategories = null)
         {
             var question = await _repo.GetRandomQuestionAsync(excludedQuestionIds, allowedCategories);

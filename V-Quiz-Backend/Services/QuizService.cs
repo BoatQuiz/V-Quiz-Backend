@@ -21,8 +21,7 @@ namespace V_Quiz_Backend.Services
             // 1. Skapa session
             var sessionResponse = await _sessionService.CreateSessionAsync(
                 userId: userId,
-                targetQuestionsCount: 10,
-                allowedCategories: null);
+                targetQuestionsCount: 10);
 
             if (!sessionResponse.Success || sessionResponse.Data == null)
             {
@@ -34,7 +33,7 @@ namespace V_Quiz_Backend.Services
             // 2. Hämta första frågan(Inga exkluderingar eftersom det är första frågan)
             var questionResponse = await _questionService.GetRandomQuestionAsync(
                 excludedQuestionIds: Enumerable.Empty<string>(),
-                allowedCategories: session.AllowedCategories);
+                allowedCategories: session.Player.Categories);
 
             if (!questionResponse.Success || questionResponse.Data == null)
             {
@@ -93,7 +92,7 @@ namespace V_Quiz_Backend.Services
 
             var questionResponse = await _questionService.GetRandomQuestionAsync(
                 excludedQuestionIds: excludedIds,
-                allowedCategories: session.AllowedCategories);
+                allowedCategories: session.Player.Categories);
 
             if (!questionResponse.Success || questionResponse.Data == null)
             {

@@ -9,6 +9,27 @@ namespace V_Quiz_Backend.Services
 {
     public class UserService(IUserRepository repo, IPasswordHasher hasher) : IUserService
     {
+        public async Task<ServiceResponse<QuizProfile>> GetQuizProfileAsync(Guid? userId)
+        {
+            // Ej inloggad användare, returnera standardprofil
+            if (!userId.HasValue)
+            {
+                var userProfile = new QuizProfile
+                {
+                    Audience = "general",
+                    Categories = []
+                };
+                return ServiceResponse<QuizProfile>.Ok(userProfile, "Default quiz profile retrieved successfully");
+            }
+
+            var profile = await repo.GetQuizProfileAsync(userId.Value);
+            if (profile == null)
+            {
+                return ServiceResponse<QuizProfile>.Fail("Quiz profile not found");
+            }
+            return ServiceResponse<QuizProfile>.Ok(profile, "Quiz profile retrieved successfully");
+        }
+
         public async Task<ServiceResponse<UserId>> LoginUserAsync(LoginDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.Username) || string.IsNullOrWhiteSpace(dto.Password))
@@ -47,6 +68,11 @@ namespace V_Quiz_Backend.Services
                 UserId = Guid.NewGuid(),
                 Username = dto.Username,
                 PasswordHash = hasher.Hash(dto.Password),
+                QuizProfile = new QuizProfile
+                {
+                    Audience = "General",
+                    Categories = []
+                },
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -61,6 +87,20 @@ namespace V_Quiz_Backend.Services
                 return ServiceResponse<UserId>.Fail($"Error creating user: {ex.Message}");
             }
             return ServiceResponse<UserId>.Ok(new UserId { Id = newUser.UserId }, "User registered successfully");
+        }
+
+        public async Task<ServiceResponse<SessionUser>> GetSessionUserAsync(Guid userId)
+        {
+            if (userId == Guid.Empty)
+            {
+                return ServiceResponse<SessionUser>.Fail("Invalid user ID");
+            }
+            var user = await repo.GetSessionUserAsync(userId);
+            if (user == null)
+            {
+                return ServiceResponse<SessionUser>.Fail("User not found");
+            }
+            return ServiceResponse<SessionUser>.Ok(user, "Session user retrieved successfully");
         }
     }
 }

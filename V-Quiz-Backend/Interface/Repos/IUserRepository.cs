@@ -7,5 +7,7 @@ namespace V_Quiz_Backend.Interface.Repos
     {
         Task<UserEntity> GetUserByNameAsync(string userName);
         Task CreateUserAsync(UserEntity user);
+        Task<QuizProfile> GetQuizProfileAsync(Guid userId);
+        Task<SessionUser> GetSessionUserAsync(Guid userId);
     }
 }
