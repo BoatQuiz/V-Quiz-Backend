@@ -22,11 +22,17 @@ namespace V_Quiz_Backend.Services
             return ServiceResponse<Question>.Ok(question);
         }
 
-        public async Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(
-            IEnumerable<string> excludedQuestionIds,
-            IEnumerable<string>? allowedCategories = null)
+        public async Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(Session session)
         {
-            var question = await _repo.GetRandomQuestionAsync(excludedQuestionIds, allowedCategories);
+            var filter = new QuestionFilter
+            {
+                ExcludedQuestionIds = session.UsedQuestions.Select(q => q.QuestionId),
+                AllowedCategories = session.Player.Categories,
+                Difficulty = null,
+                Audience = session.Player.Audience
+            };
+
+            var question = await _repo.GetRandomQuestionAsync(filter);
             
             if (question == null)
             {

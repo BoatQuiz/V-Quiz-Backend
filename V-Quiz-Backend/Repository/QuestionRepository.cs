@@ -33,31 +33,35 @@ namespace V_Quiz_Backend.Repository
             return await _collection.Find(filter).FirstOrDefaultAsync();
         }
 
-        public async Task<Question> GetRandomQuestionAsync(
-            IEnumerable<string> excludedQuestionIds,
-            IEnumerable<string>? allowedCategories)
+        public async Task<Question> GetRandomQuestionAsync(QuestionFilter filter)
         {
-            var sw = System.Diagnostics.Stopwatch.StartNew();
-            var filterBuilder = Builders<Question>.Filter;
+            var mongoFilter = Builders<Question>.Filter.Empty;
 
-            var filter = filterBuilder.Nin(q => q.QuestionId, excludedQuestionIds);
-
-            if (allowedCategories != null && allowedCategories.Any())
+            if (filter.ExcludedQuestionIds.Any())
             {
-                filter &= filterBuilder.AnyIn(q => q.Category, allowedCategories);
+                mongoFilter &= Builders<Question>.Filter.Nin(q => q.QuestionId, filter.ExcludedQuestionIds);
             }
 
-            var question = await _collection
+            if (filter.AllowedCategories?.Any() == true)
+            {
+                mongoFilter &= Builders<Question>.Filter.AnyIn(q => q.Category, filter.AllowedCategories);
+            }
+
+            if (filter.Difficulty.HasValue)
+            {
+                mongoFilter &= Builders<Question>.Filter.Eq(q => q.Difficulty, filter.Difficulty.Value);
+            }
+            
+            if (filter.Audience?.Any() == true)
+            {
+                mongoFilter &= Builders<Question>.Filter.AnyEq(q => q.Audience, filter.Audience);
+            }
+
+            return await _collection
                 .Aggregate()
-                .Match(filter)
+                .Match(mongoFilter)
                 .Sample(1)
                 .FirstOrDefaultAsync();
-
-            sw.Stop();
-
-            _logger.LogDebug("GetRandomQuestionAsync DB query took {ElapsedMs} ms", sw.ElapsedMilliseconds);
-
-            return question;
         }
 
     }

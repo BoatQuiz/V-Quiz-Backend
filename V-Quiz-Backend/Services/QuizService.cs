@@ -31,10 +31,8 @@ namespace V_Quiz_Backend.Services
             var session = sessionResponse.Data;
 
             // 2. Hämta första frågan(Inga exkluderingar eftersom det är första frågan)
-            var questionResponse = await _questionService.GetRandomQuestionAsync(
-                excludedQuestionIds: Enumerable.Empty<string>(),
-                allowedCategories: session.Player.Categories);
-
+            var questionResponse = await _questionService.GetRandomQuestionAsync(session);
+                
             if (!questionResponse.Success || questionResponse.Data == null)
             {
                 return ServiceResponse<QuestionResponse>.Fail("Failed to retrieve question.");
@@ -90,9 +88,7 @@ namespace V_Quiz_Backend.Services
             var excludedIds = session.UsedQuestions.Select(q => q.QuestionId);
 
 
-            var questionResponse = await _questionService.GetRandomQuestionAsync(
-                excludedQuestionIds: excludedIds,
-                allowedCategories: session.Player.Categories);
+            var questionResponse = await _questionService.GetRandomQuestionAsync(session);
 
             if (!questionResponse.Success || questionResponse.Data == null)
             {

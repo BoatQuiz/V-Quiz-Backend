@@ -7,9 +7,7 @@ namespace V_Quiz_Backend.Interface.Services
     public interface IQuestionService
     {
         public Task<ServiceResponse<Question>> GetQuestionByIdAsync(string questionId);
-        
-        public Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(
-            IEnumerable<string> excludedQuestionIds,
-            IEnumerable<string>? allowedCategories);
+
+        public Task<ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(Session session);
     }
 }
