@@ -20,6 +20,9 @@ namespace V_Quiz_Backend.Models
         [BsonElement("category")]
         public List<string> Category { get; set; } = [];
 
+        [BsonElement("subcategory")]
+        public List<string>? Subcategory { get; set; } = [];
+
         [BsonElement("difficulty")]
         public int Difficulty { get; set; } = 1;
 
@@ -43,6 +46,10 @@ namespace V_Quiz_Backend.Models
 
         [BsonElement("version")]
         public int Version { get; set; }
+
+        [BsonElement("source")]
+        [BsonIgnoreIfNull]
+        public SourceReference? Source { get; set; }
 
         [BsonElement("createdAt")]
         public DateTime CreatedAt { get; set; }
