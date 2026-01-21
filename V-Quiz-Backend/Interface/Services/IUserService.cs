@@ -7,5 +7,8 @@ namespace V_Quiz_Backend.Interface.Services
     { 
         Task<ServiceResponse<UserId>> RegisterUserAsync(LoginDto dto);
         Task<ServiceResponse<UserId>> LoginUserAsync(LoginDto dto);
+
+        Task<ServiceResponse<QuizProfile>> GetQuizProfileAsync(Guid? userId);
+        Task<ServiceResponse<SessionUser>> GetSessionUserAsync(Guid userId);
     }
 }

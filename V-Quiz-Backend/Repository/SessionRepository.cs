@@ -55,7 +55,7 @@ namespace V_Quiz_Backend.Repository
                 .Project(s => new SessionIdentity
                 {
                     SessionId = s.Id,
-                    UserId = s.UserId,
+                    UserId = s.Player.UserId
                     // TODO: Koppla på användarnamn när användarmodellen är klar
                     //UserName = s.UserName
                 })

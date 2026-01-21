@@ -5,20 +5,33 @@ using V_Quiz_Backend.Models;
 
 namespace V_Quiz_Backend.Services
 {
-    public class SessionService(ISessionRepository repo) : ISessionService
+    public class SessionService(ISessionRepository repo, IUserService userService) : ISessionService
     {
         private readonly ISessionRepository _repo = repo;
+        private readonly IUserService _userService = userService;
 
         public async Task<ServiceResponse<Session>> CreateSessionAsync(Guid? userId = null, int targetQuestionsCount = 10, List<string>? allowedCategories = null)
         {
+            var quizProfileResponse = await _userService.GetQuizProfileAsync(userId);
+
+            if (quizProfileResponse == null ||
+                !quizProfileResponse.Success ||
+                quizProfileResponse.Data == null)
+            {
+                return ServiceResponse<Session>.Fail("Failed to retrieve user quiz profile.");
+            }
 
             var session = new Session
             {
-                UserId = userId,
+                Player = new SessionUser
+                {
+                    UserId = userId,
+                    Audience = quizProfileResponse.Data.Audience ?? "general",
+                    Categories = quizProfileResponse.Data.Categories,
+                },
                 StartedAtUtc = DateTime.UtcNow,
-                
+
                 TargetQuestionCount = targetQuestionsCount,
-                AllowedCategories = allowedCategories,
 
                 CurrentQuestion = null,
                 UsedQuestions = new List<UsedQuestion>(),
@@ -32,7 +45,7 @@ namespace V_Quiz_Backend.Services
                 {
                     return ServiceResponse<Session>.Fail("Failed to create session.");
                 }
-            return ServiceResponse<Session>.Ok(session, "Session created successfully.");
+                return ServiceResponse<Session>.Ok(session, "Session created successfully.");
             }
             catch (Exception ex)
             {

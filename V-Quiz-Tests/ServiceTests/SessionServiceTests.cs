@@ -7,30 +7,51 @@ namespace V_Quiz_Tests.ServiceTests
     public class SessionServiceTests : TestBase
     {
         [Fact]
-        public async Task CreateSession_ShouldReturnValidSessionId()
+        public async Task CreateSession_ShouldReturn_ValidSessionId()
         {
+            var userId = Guid.NewGuid();
+            var profile = new QuizProfile
+            {
+                Audience = "general",
+                Categories = ["science", "history"]
+
+            };
             // Arrange
             SessionRepoMock.Setup(repo => repo.CreateSessionAsync(It.IsAny<Session>()))
                 .ReturnsAsync(true);
 
-            var service = new SessionService(SessionRepoMock.Object);
+            UserServiceMock.Setup(svc => svc.GetQuizProfileAsync(userId))
+                .ReturnsAsync(ServiceResponse<QuizProfile>.Ok(profile));
+
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
             // Act
-            var result = await service.CreateSessionAsync();
+            var result = await service.CreateSessionAsync(userId);
             // Assert
             Assert.True(result.Success);
             Assert.NotNull(result.Data);
-           
+
         }
 
         [Fact]
         public async Task CreateSession_Should_ReturnFail_WhenInsertFails()
         {
+            var userId = Guid.NewGuid();
+            var profile = new QuizProfile
+            {
+                Audience = "general",
+                Categories = ["science", "history"]
+
+            };
             // Arrange
             SessionRepoMock
                 .Setup(r => r.CreateSessionAsync(It.IsAny<Session>()))
                 .ReturnsAsync(false);
 
-            var service = new SessionService(SessionRepoMock.Object);
+            UserServiceMock.Setup(svc => svc.GetQuizProfileAsync(userId))
+                .ReturnsAsync(ServiceResponse<QuizProfile>.Ok(profile));
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
 
             // Act
             var result = await service.CreateSessionAsync();
@@ -42,6 +63,14 @@ namespace V_Quiz_Tests.ServiceTests
         [Fact]
         public async Task GetSessionById_Should_ReturnSuccess_WhenSessionExists()
         {
+            var userId = Guid.NewGuid();
+            var profile = new QuizProfile
+            {
+                Audience = "general",
+                Categories = ["science", "history"]
+
+            };
+
             // Arrange
             var session = new Session { Id = Guid.NewGuid() };
 
@@ -49,7 +78,11 @@ namespace V_Quiz_Tests.ServiceTests
                 .Setup(r => r.GetSessionAsync(session.Id))
                 .ReturnsAsync(session);
 
-            var service = new SessionService(SessionRepoMock.Object);
+            UserServiceMock.Setup(svc => svc.GetQuizProfileAsync(userId))
+                .ReturnsAsync(ServiceResponse<QuizProfile>.Ok(profile));
+
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
 
             // Act
             var result = await service.GetSessionByIdAsync(session.Id);
@@ -61,12 +94,22 @@ namespace V_Quiz_Tests.ServiceTests
         [Fact]
         public async Task GetSessionById_Should_ReturnFail_WhenSessionDoesNotExist()
         {
+            var userId = Guid.NewGuid();
+            var profile = new QuizProfile
+            {
+                Audience = "general",
+                Categories = ["science", "history"]
+
+            };
             // Arrange
             SessionRepoMock
                 .Setup(r => r.GetSessionAsync(It.IsAny<Guid>()))
                 .ReturnsAsync((Session?)null);
 
-            var service = new SessionService(SessionRepoMock.Object);
+            UserServiceMock.Setup(svc => svc.GetQuizProfileAsync(userId))
+                .ReturnsAsync(ServiceResponse<QuizProfile>.Ok(profile));
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
 
             // Act
             var result = await service.GetSessionByIdAsync(Guid.NewGuid());
@@ -78,6 +121,16 @@ namespace V_Quiz_Tests.ServiceTests
         [Fact]
         public async Task UpdateSession_Should_ReturnSuccess_WhenUpdateSucceeds()
         {
+            var userId = Guid.NewGuid();
+            var profile = new QuizProfile
+            {
+                Audience = "general",
+                Categories = ["science", "history"]
+
+            };
+
+
+
             // Arrange
             var session = new Session { Id = Guid.NewGuid() };
 
@@ -85,7 +138,10 @@ namespace V_Quiz_Tests.ServiceTests
                 .Setup(r => r.UpdateSessionAsync(session))
                 .Returns(Task.CompletedTask);
 
-            var service = new SessionService(SessionRepoMock.Object);
+            UserServiceMock.Setup(svc => svc.GetQuizProfileAsync(userId))
+                            .ReturnsAsync(ServiceResponse<QuizProfile>.Ok(profile));
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
 
             // Act
             var result = await service.UpdateSessionAsync(session);
@@ -97,6 +153,15 @@ namespace V_Quiz_Tests.ServiceTests
         [Fact]
         public async Task UpdateSession_Should_ReturnFail_WhenExceptionThrown()
         {
+            var userId = Guid.NewGuid();
+            var profile = new QuizProfile
+            {
+                Audience = "general",
+                Categories = ["science", "history"]
+
+            };
+
+
             // Arrange
             var session = new Session { Id = Guid.NewGuid() };
 
@@ -104,7 +169,10 @@ namespace V_Quiz_Tests.ServiceTests
                 .Setup(r => r.UpdateSessionAsync(session))
                 .ThrowsAsync(new Exception("DB error"));
 
-            var service = new SessionService(SessionRepoMock.Object);
+            UserServiceMock.Setup(svc => svc.GetQuizProfileAsync(userId))
+                            .ReturnsAsync(ServiceResponse<QuizProfile>.Ok(profile));
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
 
             // Act
             var result = await service.UpdateSessionAsync(session);
@@ -117,6 +185,16 @@ namespace V_Quiz_Tests.ServiceTests
         [Fact]
         public async Task SetCurrentQuestionAsync_Should_UpdateCurrentQuestion()
         {
+            var userId = Guid.NewGuid();
+            var profile = new QuizProfile
+            {
+                Audience = "general",
+                Categories = ["science", "history"]
+
+            };
+
+
+
             // Arrange
             var sessionId = Guid.NewGuid();
             var question = new CurrentQuestionState
@@ -127,7 +205,11 @@ namespace V_Quiz_Tests.ServiceTests
 
             SessionRepoMock
                 .Setup(r => r.SetCurrentQuestionAsync(sessionId, question));
-            var service = new SessionService(SessionRepoMock.Object);
+
+            UserServiceMock.Setup(svc => svc.GetQuizProfileAsync(userId))
+                            .ReturnsAsync(ServiceResponse<QuizProfile>.Ok(profile));
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
 
             // Act
             var result = await service.SetCurrentQuestionAsync(sessionId, question.QuestionId);
@@ -140,13 +222,27 @@ namespace V_Quiz_Tests.ServiceTests
         [Fact]
         public async Task SetCurrentQuestionAsync_Should_ReturnFail_WhenExceptionThrown()
         {
+            var userId = Guid.NewGuid();
+            var profile = new QuizProfile
+            {
+                Audience = "general",
+                Categories = ["science", "history"]
+
+            };
+
+
+
             // Arrange
             var sessionId = Guid.NewGuid();
             var questionId = "q23";
             SessionRepoMock
                 .Setup(r => r.SetCurrentQuestionAsync(sessionId, It.IsAny<CurrentQuestionState>()))
                 .ThrowsAsync(new Exception("DB error"));
-            var service = new SessionService(SessionRepoMock.Object);
+
+            UserServiceMock.Setup(svc => svc.GetQuizProfileAsync(userId))
+                            .ReturnsAsync(ServiceResponse<QuizProfile>.Ok(profile));
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
             // Act
             var result = await service.SetCurrentQuestionAsync(sessionId, questionId);
             // Assert

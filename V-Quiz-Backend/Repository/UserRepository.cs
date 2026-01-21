@@ -17,10 +17,35 @@ namespace V_Quiz_Backend.Repository
             // Denna skulle kunna byggas om för att få en bekräftelde på att det inte blir fel
         }
 
+        public async Task<QuizProfile> GetQuizProfileAsync(Guid userId)
+        {
+            return await _collection
+                .Find(user => user.UserId == userId)
+                .Project(user => new QuizProfile
+                {
+                    Audience = user.QuizProfile.Audience,
+                    Categories = user.QuizProfile.Categories
+                })
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<UserEntity> GetUserByNameAsync(string userName)
         {
             return await _collection
                 .Find(user => user.Username == userName)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<SessionUser> GetSessionUserAsync(Guid userId)
+        {
+            return await _collection
+                .Find(user => user.UserId == userId)
+                .Project(user => new SessionUser
+                {
+                    UserId = user.UserId,
+                    Audience = user.QuizProfile.Audience,
+                    Categories = user.QuizProfile.Categories
+                })
                 .FirstOrDefaultAsync();
         }
     }

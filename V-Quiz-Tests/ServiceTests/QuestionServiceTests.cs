@@ -60,17 +60,28 @@ namespace V_Quiz_Tests.ServiceTests
                 Category = ["Geography"]
             };
 
+            var filter = new QuestionFilter
+            {
+                ExcludedQuestionIds = [],
+                AllowedCategories = null,
+                Difficulty = null,
+                Audience = ""
+            };
+
+            var session = new Session
+            {
+                Player = new SessionUser { Audience = "general", Categories = ["history", "Geography"] },
+                UsedQuestions = new List<UsedQuestion>()
+            };
+
             QuestionRepoMock
-                .Setup(r => r.GetRandomQuestionAsync(
-                    It.IsAny<IEnumerable<string>>(), 
-                    It.IsAny<IEnumerable<string>?>()
-                ))
+                .Setup(r => r.GetRandomQuestionAsync(It.IsAny<QuestionFilter>()))
                 .ReturnsAsync(question);
 
             var service = new QuestionService(QuestionRepoMock.Object);
 
             // Act
-            var result = await service.GetRandomQuestionAsync(new List<string>());
+            var result = await service.GetRandomQuestionAsync(session);
 
             // Assert
             Assert.True(result.Success);
@@ -78,20 +89,31 @@ namespace V_Quiz_Tests.ServiceTests
         }
 
         [Fact]
-        public async Task GetRandomQuestion_Should_ReturnFail_WhenNoQuestionsAvailable()
+        public async Task GetRandomQuestion_ShouldReturnFail_WhenNoQuestionsAvailable()
         {
+            var filter = new QuestionFilter
+            {
+                ExcludedQuestionIds = [],
+                AllowedCategories = null,
+                Difficulty = null,
+                Audience = ""
+            };
+
+            var session = new Session
+            {
+                Player = new SessionUser { Audience = "general", Categories = ["science"] },
+                UsedQuestions = new List<UsedQuestion>()
+            };
+
             // Arrange
             QuestionRepoMock
-                .Setup(r => r.GetRandomQuestionAsync(
-                    It.IsAny<IEnumerable<string>>(),
-                    It.IsAny<IEnumerable<string>?>()
-                    ))
+                .Setup(r => r.GetRandomQuestionAsync(filter))
                 .ReturnsAsync((Question?)null);
 
             var service = new QuestionService(QuestionRepoMock.Object);
 
             // Act
-            var result = await service.GetRandomQuestionAsync(new List<string>());
+            var result = await service.GetRandomQuestionAsync(session);
 
             // Assert
             Assert.False(result.Success);
@@ -101,4 +123,3 @@ namespace V_Quiz_Tests.ServiceTests
 }
 
 
-   

@@ -12,8 +12,16 @@ namespace V_Quiz_Backend.Models
         public string Username { get; set; } = null!;
         public string? Email { get; set; } 
         public string PasswordHash { get; set; } = null!;
+
+        // still not in use
         public string? Rank { get; set; }
         public string? ShippingCompany { get; set; }
+
+        // Quiz preferences
+        [BsonElement("quizProfile")]
+        public QuizProfile QuizProfile { get; set; } = new();
+
+
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
