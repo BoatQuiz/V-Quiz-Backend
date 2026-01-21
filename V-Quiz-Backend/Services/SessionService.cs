@@ -12,15 +12,22 @@ namespace V_Quiz_Backend.Services
 
         public async Task<ServiceResponse<Session>> CreateSessionAsync(Guid? userId = null, int targetQuestionsCount = 10, List<string>? allowedCategories = null)
         {
-            var quizProfile = await _userService.GetQuizProfileAsync(userId);
+            var quizProfileResponse = await _userService.GetQuizProfileAsync(userId);
+
+            if (quizProfileResponse == null ||
+                !quizProfileResponse.Success ||
+                quizProfileResponse.Data == null)
+            {
+                return ServiceResponse<Session>.Fail("Failed to retrieve user quiz profile.");
+            }
 
             var session = new Session
             {
                 Player = new SessionUser
                 {
                     UserId = userId,
-                    Audience = quizProfile.Data.Audience ?? "general",
-                    Categories = quizProfile.Data.Categories,
+                    Audience = quizProfileResponse.Data.Audience ?? "general",
+                    Categories = quizProfileResponse.Data.Categories,
                 },
                 StartedAtUtc = DateTime.UtcNow,
 
