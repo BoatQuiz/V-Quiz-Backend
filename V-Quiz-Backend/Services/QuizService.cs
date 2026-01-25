@@ -97,6 +97,8 @@ namespace V_Quiz_Backend.Services
 
             var q = questionResponse.Data;
 
+            var shuffled = QuestionService.ShuffleQuestion(q);
+
             // 5. Sätt nuvarande fråga i sessionen + starttid
             await _sessionService.SetCurrentQuestionAsync(session.Id, q);
 
