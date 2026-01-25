@@ -141,24 +141,24 @@ namespace V_Quiz_Backend.Services
             }
 
             // 4. Hämta fråga
-            var questionResponse = await _questionService.GetQuestionByIdAsync(request.QuestionId);
-            if (!questionResponse.Success || questionResponse.Data == null)
-            {
-                return ServiceResponse<SubmitAnswerResponse>.Fail("Invalid question.");
-            }
+            //var questionResponse = await _questionService.GetQuestionByIdAsync(request.QuestionId);
+            //if (!questionResponse.Success || questionResponse.Data == null)
+            //{
+            //    return ServiceResponse<SubmitAnswerResponse>.Fail("Invalid question.");
+            //}
 
-            var question = questionResponse.Data;
+            //var question = questionResponse.Data;
 
             // 5. Kontrollera svaret + tid
-            bool isCorrect = request.SelectedAnswer == question.CorrectIndex;
+            bool isCorrect = request.SelectedAnswer == session.CurrentQuestion.CorrectIndex;
 
             var timeMs = (DateTime.UtcNow - session.CurrentQuestion.AskedAtUtc).TotalMilliseconds;
 
             // 6. Skapa UsedQuestion
             var usedQuestion = new UsedQuestion
             {
-                QuestionId = question.QuestionId,
-                Category = question.Category,
+                QuestionId = session.CurrentQuestion.QuestionId,
+                Category = session.CurrentQuestion.Category,
                 AnsweredCorrectly = isCorrect,
                 TimeMs = timeMs
             };
@@ -173,9 +173,8 @@ namespace V_Quiz_Backend.Services
             return ServiceResponse<SubmitAnswerResponse>.Ok(new SubmitAnswerResponse
             {
                 IsCorrect = isCorrect,
-                CorrectIndex = question.CorrectIndex,
-                CorrectAnswer = question.Options[question.CorrectIndex],
-
+                CorrectIndex = session.CurrentQuestion.CorrectIndex,
+                
                 QuestionsAnswered = session.UsedQuestions.Count + 1,
                 Score = session.UsedQuestions.Count(q => q.AnsweredCorrectly) + (isCorrect ? 1 : 0),
 

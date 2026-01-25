@@ -4,6 +4,7 @@
     {
         public string QuestionId { get; set; } = string.Empty;
         public string QuestionText { get; set; }
+        public List<string>? Category { get; set; }
         public DateTime AskedAtUtc { get; set; }
         public int? TimeLimitMS { get; set; }
 

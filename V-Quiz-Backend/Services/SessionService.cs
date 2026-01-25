@@ -87,6 +87,7 @@ namespace V_Quiz_Backend.Services
                 {
                     QuestionId = q.QuestionId,
                     QuestionText = q.QuestionText,
+                    Category = q.Category,
                     ShuffledOptions = q.Options,
                     CorrectIndex = q.CorrectIndex,
                     AskedAtUtc = DateTime.UtcNow,
