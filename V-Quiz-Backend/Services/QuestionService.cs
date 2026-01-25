@@ -43,7 +43,8 @@ namespace V_Quiz_Backend.Services
             {
                 QuestionId = question.QuestionId,
                 QuestionText = question.Text,
-                Options = question.Options
+                Options = question.Options,
+                CorrectIndex = question.CorrectIndex,
             });
         }
     }

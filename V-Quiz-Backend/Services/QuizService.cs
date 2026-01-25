@@ -38,10 +38,10 @@ namespace V_Quiz_Backend.Services
                 return ServiceResponse<QuestionResponse>.Fail("Failed to retrieve question.");
             }
 
-            var q = questionResponse.Data;
+            var question = questionResponse.Data;
 
             // 3. Sätt nuvarande fråga i sessionen 
-            await _sessionService.SetCurrentQuestionAsync(session.Id, q.QuestionId);
+            await _sessionService.SetCurrentQuestionAsync(session.Id, question);
 
             // 4. Returnera minimal payload med session och fråga
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
@@ -54,9 +54,9 @@ namespace V_Quiz_Backend.Services
                 },
                 Question = new QuestionResponseDto
                 {
-                    QuestionId = q.QuestionId,
-                    QuestionText = q.QuestionText,
-                    Options = q.Options
+                    QuestionId = question.QuestionId,
+                    QuestionText = question.QuestionText,
+                    Options = question.Options
                 }
             });
         }
@@ -98,7 +98,7 @@ namespace V_Quiz_Backend.Services
             var q = questionResponse.Data;
 
             // 5. Sätt nuvarande fråga i sessionen + starttid
-            await _sessionService.SetCurrentQuestionAsync(session.Id, q.QuestionId);
+            await _sessionService.SetCurrentQuestionAsync(session.Id, q);
 
             // 6. Returnera minimal payload med session och fråga
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
