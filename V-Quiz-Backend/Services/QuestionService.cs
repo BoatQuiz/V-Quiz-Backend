@@ -43,8 +43,28 @@ namespace V_Quiz_Backend.Services
             {
                 QuestionId = question.QuestionId,
                 QuestionText = question.Text,
-                Options = question.Options
+                Options = question.Options,
+                CorrectIndex = question.CorrectIndex,
             });
+        }
+
+        public static QuestionResponseDto ShuffleQuestion(QuestionResponseDto question)
+        {
+            var rnd = new Random();
+
+            var options = question.Options
+                .Select((text, index) => new 
+                { 
+                    Text = text, 
+                    IsCorrect = index == question.CorrectIndex
+                })
+                .OrderBy(_ => rnd.Next())
+                .ToList();
+
+            question.Options = options.Select(o => o.Text).ToList();
+            question.CorrectIndex = options.FindIndex(o => o.IsCorrect);
+
+            return question;
         }
     }
 }

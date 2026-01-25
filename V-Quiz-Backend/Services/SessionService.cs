@@ -79,13 +79,17 @@ namespace V_Quiz_Backend.Services
             }
         }
 
-        public async Task<ServiceResponse<bool>> SetCurrentQuestionAsync(Guid sessionId, string currentQuestionId)
+        public async Task<ServiceResponse<bool>> SetCurrentQuestionAsync(Guid sessionId, QuestionResponseDto q)
         {
             try
             {
                 var question = new CurrentQuestionState
                 {
-                    QuestionId = currentQuestionId,
+                    QuestionId = q.QuestionId,
+                    QuestionText = q.QuestionText,
+                    Category = q.Category,
+                    ShuffledOptions = q.Options,
+                    CorrectIndex = q.CorrectIndex,
                     AskedAtUtc = DateTime.UtcNow,
                 };
                 await _repo.SetCurrentQuestionAsync(sessionId, question);

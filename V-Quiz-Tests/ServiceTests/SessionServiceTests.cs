@@ -1,4 +1,5 @@
 ﻿using Moq;
+using V_Quiz_Backend.DTO;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
 
@@ -200,7 +201,18 @@ namespace V_Quiz_Tests.ServiceTests
             var question = new CurrentQuestionState
             {
                 QuestionId = "q23",
+                QuestionText = "What is the capital of France?",
+                ShuffledOptions = new List<string> { "Berlin", "Madrid", "Paris", "Rome" },
+                CorrectIndex = 2,
                 AskedAtUtc = DateTime.UtcNow
+            };
+
+            var questionResponse = new QuestionResponseDto
+            {
+                QuestionId = question.QuestionId,
+                QuestionText = question.QuestionText,
+                Options = question.ShuffledOptions,
+                CorrectIndex = question.CorrectIndex,
             };
 
             SessionRepoMock
@@ -212,7 +224,7 @@ namespace V_Quiz_Tests.ServiceTests
             var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
 
             // Act
-            var result = await service.SetCurrentQuestionAsync(sessionId, question.QuestionId);
+            var result = await service.SetCurrentQuestionAsync(sessionId, questionResponse);
 
             // Assert
             Assert.True(result.Success);
@@ -234,7 +246,23 @@ namespace V_Quiz_Tests.ServiceTests
 
             // Arrange
             var sessionId = Guid.NewGuid();
-            var questionId = "q23";
+            var question = new CurrentQuestionState
+            {
+                QuestionId = "q23",
+                QuestionText = "What is the capital of France?",
+                ShuffledOptions = new List<string> { "Berlin", "Madrid", "Paris", "Rome" },
+                CorrectIndex = 2,
+                AskedAtUtc = DateTime.UtcNow
+            };
+
+            var questionResponse = new QuestionResponseDto
+            {
+                QuestionId = question.QuestionId,
+                QuestionText = question.QuestionText,
+                Options = question.ShuffledOptions,
+                CorrectIndex = question.CorrectIndex,
+            };
+
             SessionRepoMock
                 .Setup(r => r.SetCurrentQuestionAsync(sessionId, It.IsAny<CurrentQuestionState>()))
                 .ThrowsAsync(new Exception("DB error"));
@@ -244,7 +272,7 @@ namespace V_Quiz_Tests.ServiceTests
 
             var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
             // Act
-            var result = await service.SetCurrentQuestionAsync(sessionId, questionId);
+            var result = await service.SetCurrentQuestionAsync(sessionId, questionResponse);
             // Assert
             Assert.False(result.Success);
             Assert.Equal("Failed to set current question: DB error", result.Message);
