@@ -1,6 +1,7 @@
 ﻿using Moq;
 using V_Quiz_Backend.Interface;
 using V_Quiz_Backend.Interface.Repos;
+using V_Quiz_Backend.Interface.Services;
 
 namespace V_Quiz_Tests
 {
@@ -11,6 +12,7 @@ namespace V_Quiz_Tests
         protected readonly Mock<IQuestionRepository> QuestionRepoMock;
         protected readonly Mock<IUserRepository> UserRepoMock;
         protected readonly Mock<IPasswordHasher> PasswordHasherMock;
+        protected readonly Mock<IUserService> UserServiceMock;
 
         protected TestBase()
         {
@@ -19,6 +21,7 @@ namespace V_Quiz_Tests
             QuestionRepoMock = new Mock<IQuestionRepository>();
             UserRepoMock = new Mock<IUserRepository>();
             PasswordHasherMock = new Mock<IPasswordHasher>();
+            UserServiceMock = new Mock<IUserService>();
         }
     }
 }

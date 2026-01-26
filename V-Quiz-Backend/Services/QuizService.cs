@@ -21,8 +21,7 @@ namespace V_Quiz_Backend.Services
             // 1. Skapa session
             var sessionResponse = await _sessionService.CreateSessionAsync(
                 userId: userId,
-                targetQuestionsCount: 10,
-                allowedCategories: null);
+                targetQuestionsCount: 10);
 
             if (!sessionResponse.Success || sessionResponse.Data == null)
             {
@@ -32,19 +31,17 @@ namespace V_Quiz_Backend.Services
             var session = sessionResponse.Data;
 
             // 2. Hämta första frågan(Inga exkluderingar eftersom det är första frågan)
-            var questionResponse = await _questionService.GetRandomQuestionAsync(
-                excludedQuestionIds: Enumerable.Empty<string>(),
-                allowedCategories: session.AllowedCategories);
-
+            var questionResponse = await _questionService.GetRandomQuestionAsync(session);
+                
             if (!questionResponse.Success || questionResponse.Data == null)
             {
                 return ServiceResponse<QuestionResponse>.Fail("Failed to retrieve question.");
             }
 
-            var q = questionResponse.Data;
+            var question = questionResponse.Data;
 
             // 3. Sätt nuvarande fråga i sessionen 
-            await _sessionService.SetCurrentQuestionAsync(session.Id, q.QuestionId);
+            await _sessionService.SetCurrentQuestionAsync(session.Id, question);
 
             // 4. Returnera minimal payload med session och fråga
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
@@ -57,9 +54,9 @@ namespace V_Quiz_Backend.Services
                 },
                 Question = new QuestionResponseDto
                 {
-                    QuestionId = q.QuestionId,
-                    QuestionText = q.QuestionText,
-                    Options = q.Options
+                    QuestionId = question.QuestionId,
+                    QuestionText = question.QuestionText,
+                    Options = question.Options
                 }
             });
         }
@@ -91,9 +88,7 @@ namespace V_Quiz_Backend.Services
             var excludedIds = session.UsedQuestions.Select(q => q.QuestionId);
 
 
-            var questionResponse = await _questionService.GetRandomQuestionAsync(
-                excludedQuestionIds: excludedIds,
-                allowedCategories: session.AllowedCategories);
+            var questionResponse = await _questionService.GetRandomQuestionAsync(session);
 
             if (!questionResponse.Success || questionResponse.Data == null)
             {
@@ -102,8 +97,10 @@ namespace V_Quiz_Backend.Services
 
             var q = questionResponse.Data;
 
+            var shuffled = QuestionService.ShuffleQuestion(q);
+
             // 5. Sätt nuvarande fråga i sessionen + starttid
-            await _sessionService.SetCurrentQuestionAsync(session.Id, q.QuestionId);
+            await _sessionService.SetCurrentQuestionAsync(session.Id, q);
 
             // 6. Returnera minimal payload med session och fråga
             return ServiceResponse<QuestionResponse>.Ok(new QuestionResponse
@@ -146,24 +143,24 @@ namespace V_Quiz_Backend.Services
             }
 
             // 4. Hämta fråga
-            var questionResponse = await _questionService.GetQuestionByIdAsync(request.QuestionId);
-            if (!questionResponse.Success || questionResponse.Data == null)
-            {
-                return ServiceResponse<SubmitAnswerResponse>.Fail("Invalid question.");
-            }
+            //var questionResponse = await _questionService.GetQuestionByIdAsync(request.QuestionId);
+            //if (!questionResponse.Success || questionResponse.Data == null)
+            //{
+            //    return ServiceResponse<SubmitAnswerResponse>.Fail("Invalid question.");
+            //}
 
-            var question = questionResponse.Data;
+            //var question = questionResponse.Data;
 
             // 5. Kontrollera svaret + tid
-            bool isCorrect = request.SelectedAnswer == question.CorrectIndex;
+            bool isCorrect = request.SelectedAnswer == session.CurrentQuestion.CorrectIndex;
 
             var timeMs = (DateTime.UtcNow - session.CurrentQuestion.AskedAtUtc).TotalMilliseconds;
 
             // 6. Skapa UsedQuestion
             var usedQuestion = new UsedQuestion
             {
-                QuestionId = question.QuestionId,
-                Category = question.Category,
+                QuestionId = session.CurrentQuestion.QuestionId,
+                Category = session.CurrentQuestion.Category,
                 AnsweredCorrectly = isCorrect,
                 TimeMs = timeMs
             };
@@ -178,9 +175,8 @@ namespace V_Quiz_Backend.Services
             return ServiceResponse<SubmitAnswerResponse>.Ok(new SubmitAnswerResponse
             {
                 IsCorrect = isCorrect,
-                CorrectIndex = question.CorrectIndex,
-                CorrectAnswer = question.Options[question.CorrectIndex],
-
+                CorrectIndex = session.CurrentQuestion.CorrectIndex,
+                
                 QuestionsAnswered = session.UsedQuestions.Count + 1,
                 Score = session.UsedQuestions.Count(q => q.AnsweredCorrectly) + (isCorrect ? 1 : 0),
 

@@ -28,36 +28,5 @@ namespace V_Quiz_Backend.Functions
             await response.WriteAsJsonAsync(result);
             return response;
         }
-
-        [Function("UserRegister")]
-        public async Task<HttpResponseData> UserRegisterasync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "user/register")] HttpRequestData req)
-        {
-            var body = await JsonSerializer.DeserializeAsync<LoginDto>(req.Body);
-            if (body == null)
-            {
-                var badRequest = req.CreateResponse(HttpStatusCode.BadRequest);
-                await badRequest.WriteStringAsync("Invalid request body.");
-                return badRequest;
-            }
-            var result = await userService.RegisterUserAsync(body);
-
-            HttpResponseData response;
-
-            if (result.Success)
-            {
-                response = req.CreateResponse(HttpStatusCode.OK);
-            }
-            else if (result.Message == "Username already exists")
-            {
-                response = req.CreateResponse(HttpStatusCode.Conflict);
-            }
-            else
-            {
-                response = req.CreateResponse(HttpStatusCode.BadRequest);
-            }
-            await response.WriteAsJsonAsync(result);
-            return response;
-        }
     }
 }
