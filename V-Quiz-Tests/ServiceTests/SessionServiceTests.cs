@@ -33,7 +33,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.NotNull(result.Data);
 
         }
-
         [Fact]
         public async Task CreateSession_Should_ReturnFail_WhenInsertFails()
         {
@@ -60,6 +59,64 @@ namespace V_Quiz_Tests.ServiceTests
             // Assert
             Assert.False(result.Success);
             Assert.Null(result.Data);
+        }
+
+        [Fact]
+        public async Task CreateSession_ShouldReturnFail_WhenExeption()
+        {
+            var userId = Guid.NewGuid();
+            var profile = new QuizProfile
+            {
+                Audience = "general",
+                Categories = ["science", "history"]
+            };
+            // Arrange
+            SessionRepoMock
+                .Setup(r => r.CreateSessionAsync(It.IsAny<Session>()))
+                .ThrowsAsync(new Exception("DB error"));
+
+            UserServiceMock
+                .Setup(svc => svc.GetQuizProfileAsync(userId))
+                .ReturnsAsync(ServiceResponse<QuizProfile>.Ok(profile));
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
+
+            // Act
+            var result = await service.CreateSessionAsync(userId);
+            
+            // Assert
+            Assert.False(result.Success);
+            Assert.Null(result.Data);
+            Assert.Equal("Failed to create session: DB error", result.Message);
+        }
+
+        [Fact]
+        public async Task CreateSession_ShouldReturnFail_WhenInsertionSuccededIsFail()
+        {
+            var userId = Guid.NewGuid();
+            var profile = new QuizProfile
+            {
+                Audience = "general",
+                Categories = ["science", "history"]
+            };
+            // Arrange
+            SessionRepoMock
+                .Setup(r => r.CreateSessionAsync(It.IsAny<Session>()))
+                .ReturnsAsync(false);
+
+            UserServiceMock
+                .Setup(svc => svc.GetQuizProfileAsync(userId))
+                .ReturnsAsync(ServiceResponse<QuizProfile>.Ok(profile));
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
+
+            // Act
+            var result = await service.CreateSessionAsync(userId);
+
+            // Assert
+            Assert.False(result.Success);
+            Assert.Null(result.Data);
+            Assert.Equal("Failed to create session.", result.Message);
         }
         [Fact]
         public async Task GetSessionById_Should_ReturnSuccess_WhenSessionExists()
@@ -182,7 +239,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.False(result.Success);
             Assert.Equal("Failed to update session: DB error", result.Message);
         }
-
         [Fact]
         public async Task SetCurrentQuestionAsync_Should_UpdateCurrentQuestion()
         {
@@ -230,7 +286,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.True(result.Success);
             Assert.Equal("Current question set successfully.", result.Message);
         }
-
         [Fact]
         public async Task SetCurrentQuestionAsync_Should_ReturnFail_WhenExceptionThrown()
         {
@@ -241,8 +296,6 @@ namespace V_Quiz_Tests.ServiceTests
                 Categories = ["science", "history"]
 
             };
-
-
 
             // Arrange
             var sessionId = Guid.NewGuid();
@@ -277,5 +330,116 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.False(result.Success);
             Assert.Equal("Failed to set current question: DB error", result.Message);
         }
+        [Fact]
+        public async Task AppendAnsweredQuestionAsync_WhenLastQuestion_SetsEndSessionTrue()
+        {
+            // Arrange
+            Session session = new()
+            {
+                Id = Guid.NewGuid(),
+                TargetQuestionCount = 5,
+                UsedQuestions =
+                [
+                    new() { QuestionId = "q1" },
+                    new() { QuestionId = "q2" },
+                    new() { QuestionId = "q3" },
+                    new() { QuestionId = "q4" },
+                ]
+            };
+
+            UsedQuestion question = new();
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
+
+            // Act
+            await service.AppendAnsweredQuestionAsync(session, question);
+
+            // Assert
+            SessionRepoMock.Verify(r =>
+            r.AppendUsedQuestionAsync(
+                session.Id,
+                question, true
+            ), Times.Once);
+        }
+        [Fact]
+        public async Task AppendAnsweredQuestionAsync_WhenNotLastQuestion_SetsEndSessionFalse()
+        {
+            // Arrange
+            var session = new Session
+            {
+                Id = Guid.NewGuid(),
+                TargetQuestionCount = 5,
+                UsedQuestions =
+                [
+                    new() { QuestionId = "q1" },
+                    new() { QuestionId = "q2" },
+                    new() { QuestionId = "q3" },
+                ]
+            };
+
+            var question = new UsedQuestion();
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
+
+            // Act
+            await service.AppendAnsweredQuestionAsync(session, question);
+            // Assert
+            SessionRepoMock.Verify(r =>
+            r.AppendUsedQuestionAsync(
+                session.Id,
+                question, false
+            ), Times.Once);
+        }
+        [Fact]
+        public async Task GetUserIdBySessionIdAsync_Should_ReturnFail_WhenSessionIdIsEmpty()
+        {
+            // Arrange
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
+            
+            // Act
+            var result = await service.GetUserIdBySessionIdAsync(Guid.Empty);
+            
+            // Assert
+            Assert.False(result.Success);
+            Assert.Equal("Invalid session ID.", result.Message);
+        }
+        [Fact]
+        public async Task GetUserIdBySessionIdAsync_Should_ReturnFail_WhenSessionNotFound()
+        {
+            // Arrange
+            var sessionId = Guid.NewGuid();
+            SessionRepoMock
+                .Setup(r => r.GetUserIdBySessionIdAsync(sessionId))
+                .ReturnsAsync((SessionIdentity?)null);
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
+            
+            // Act
+            var result = await service.GetUserIdBySessionIdAsync(sessionId);
+            // Assert
+            Assert.False(result.Success);
+            Assert.Equal("Session not found.", result.Message);
+        }
+        [Fact]
+        public async Task GetUserIdBySessionIdAsync_Should_ReturnSuccess_WhenSessionFound()
+        {
+            // Arrange
+            var sessionId = Guid.NewGuid();
+            var expectedIdentity = new SessionIdentity
+            {
+                UserId = Guid.NewGuid(),
+                UserName = "testuser"
+            };
+            SessionRepoMock
+                .Setup(r => r.GetUserIdBySessionIdAsync(sessionId))
+                .ReturnsAsync(expectedIdentity);
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
+            
+            // Act
+            var result = await service.GetUserIdBySessionIdAsync(sessionId);
+            // Assert
+            Assert.True(result.Success);
+            Assert.Equal(expectedIdentity.UserId, result.Data.UserId);
+            Assert.Equal(expectedIdentity.UserName, result.Data.UserName);
+        }
     }
+
 }
