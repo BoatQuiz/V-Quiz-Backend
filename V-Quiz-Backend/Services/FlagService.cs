@@ -29,12 +29,16 @@ namespace V_Quiz_Backend.Services
                 request.Reasons = [FlagReason.Other];
             }
 
-            var userId = await _sessionService.GetUserIdBySessionIdAsync(request.SessionId);
-            
+            // Denna kollar om det finns en användare eller om den är anonym
+            var userIdResult = await _sessionService.GetUserIdBySessionIdAsync(request.SessionId);
+            if (!userIdResult.Success)
+            {
+                return ServiceResponse<FlaggedQuestion>.Fail("Invalid session. Unable to identify user.");
+            }
 
             var flagEntry = new FlagEntry
             {
-                UserId = userId.Data?.UserId,
+                UserId = userIdResult.Data?.UserId,
                 Reason = request.Reasons,
                 Comment = request.Comment,
                 FlaggedAt = DateTime.UtcNow

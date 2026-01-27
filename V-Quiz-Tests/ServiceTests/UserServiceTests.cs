@@ -33,7 +33,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.NotNull(result.Data);
             Assert.Equal("User registered successfully", result.Message);
         }
-
         [Fact]
         public async Task RegisterUserAsync_ReturnFail_WhenUsernameExists()
         {
@@ -64,7 +63,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.Null(result.Data);
             Assert.Equal("Username already exists", result.Message);
         }
-
         [Fact]
         public async Task RegisterUserAsync_ReturnFail_WhenUsernameOrPasswordIsEmpty()
         {
@@ -84,7 +82,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.Null(result.Data);
             Assert.Equal("Username and password cannot be empty", result.Message);
         }
-
         [Fact]
         public async Task LoginUserAsync_ReturnSuccess_WhenCredentialsAreValid()
         {
@@ -118,7 +115,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.NotNull(result.Data);
             Assert.Equal("Login successful", result.Message);
         }
-
         [Fact]
         public async Task LoginUserAsync_ReturnFail_WhenCredentialsAreInvalid()
         {
@@ -139,7 +135,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.Null(result.Data);
             Assert.Equal("Invalid username or password", result.Message);
         }
-        
         [Fact]
         public async Task LoginUserAsync_ReturnFail_WhenUsernameOrPasswordIsEmpty()
         {
@@ -157,7 +152,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.Null(result.Data);
             Assert.Equal("Username and password cannot be empty", result.Message);
         }
-
         [Fact]
         public async Task LoginUserAsync_ReturnFail_WhenPasswordAreInCorrect()
         {
@@ -191,6 +185,114 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.Null(result.Data);
             Assert.Equal("Invalid username or password", result.Message);
         }
-    }
+        [Fact]
+        public async Task GetSessionUserAsync_IfUserIdIsNull_ReturnServiceResponseFail()
+        {
+            // Arrange
+            var userId = Guid.Empty;
 
+            var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+            // Act
+            var result = await service.GetSessionUserAsync(userId);
+            // Assert
+            Assert.False(result.Success);
+            Assert.Null(result.Data);
+            Assert.Equal("Invalid user ID", result.Message);
+        }
+        [Fact]
+        public async Task GetSessionUserAsync_IfUserExists_ReturnServiceResponseOk()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var existingUser = new SessionUser
+            {
+                UserId = userId,
+                Audience = "General",
+                Categories = ["Science", "Math"]
+            };
+            UserRepoMock
+                .Setup(repo => repo.GetSessionUserAsync(userId))
+                .ReturnsAsync(existingUser);
+            var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+            // Act
+            var result = await service.GetSessionUserAsync(userId);
+            // Assert
+            Assert.True(result.Success);
+            Assert.NotNull(result.Data);
+            Assert.Equal("Session user retrieved successfully", result.Message);
+        }
+        [Fact]
+        public async Task GetSessionUserAsync_IfUserDoesNotExist_ReturnServiceResponseFail()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+
+            UserRepoMock
+                .Setup(repo => repo.GetSessionUserAsync(userId))
+                .ReturnsAsync((SessionUser?)null);
+            var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+            // Act
+            var result = await service.GetSessionUserAsync(userId);
+            // Assert
+            Assert.False(result.Success);
+            Assert.Null(result.Data);
+            Assert.Equal("User not found", result.Message);
+        }
+        [Fact]
+        public async Task GetQuizProfileAsync_IfUserHasNoID_ReturnDefaultSetting()
+        {
+            // Arrange
+            Guid? userId = null;
+            var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+            // Act
+            var result = await service.GetQuizProfileAsync(userId);
+            // Assert
+            Assert.True(result.Success);
+            Assert.NotNull(result.Data);
+            Assert.Equal("general", result.Data.Audience);
+            Assert.Empty(result.Data.Categories);
+            Assert.Equal("Default quiz profile retrieved successfully", result.Message);
+        }
+        [Fact]
+        public async Task GetQuizProfileAsync_IfUserExists_ReturnUserQuizProfile()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            var existingProfile = new QuizProfile
+            {
+                Audience = "Science Enthusiasts",
+                Categories = ["Science", "Technology"]
+            };
+            UserRepoMock
+                .Setup(repo => repo.GetQuizProfileAsync(userId))
+                .ReturnsAsync(existingProfile);
+            var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+            // Act
+            var result = await service.GetQuizProfileAsync(userId);
+            // Assert
+            Assert.True(result.Success);
+            Assert.NotNull(result.Data);
+            Assert.Equal("Science Enthusiasts", result.Data.Audience);
+            Assert.Equal(2, result.Data.Categories.Count);
+            Assert.Contains("Science", result.Data.Categories);
+            Assert.Contains("Technology", result.Data.Categories);
+            Assert.Equal("Quiz profile retrieved successfully", result.Message);
+        }
+        [Fact]
+        public async Task GetQuizProfileAsync_IfUserExistButNoProfileExist_ReturnServiceResponseFail()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            UserRepoMock
+                .Setup(repo => repo.GetQuizProfileAsync(userId))
+                .ReturnsAsync((QuizProfile?)null);
+            var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+            // Act
+            var result = await service.GetQuizProfileAsync(userId);
+            // Assert
+            Assert.False(result.Success);
+            Assert.Null(result.Data);
+            Assert.Equal("Quiz profile not found", result.Message);
+        }
+    }
 }

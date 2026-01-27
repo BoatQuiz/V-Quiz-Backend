@@ -51,7 +51,6 @@ namespace V_Quiz_Backend.Services
         public static QuestionResponseDto ShuffleQuestion(QuestionResponseDto question)
         {
             var rnd = new Random();
-
             var options = question.Options
                 .Select((text, index) => new 
                 { 

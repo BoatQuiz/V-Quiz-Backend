@@ -13,6 +13,9 @@ namespace V_Quiz_Tests
         protected readonly Mock<IUserRepository> UserRepoMock;
         protected readonly Mock<IPasswordHasher> PasswordHasherMock;
         protected readonly Mock<IUserService> UserServiceMock;
+        protected readonly Mock<ISessionService> SessionServiceMock;
+        protected readonly Mock<IQuizService> QuizServiceMock;
+        protected readonly Mock<IQuestionService> QuestionServiceMock;
 
         protected TestBase()
         {
@@ -22,6 +25,9 @@ namespace V_Quiz_Tests
             UserRepoMock = new Mock<IUserRepository>();
             PasswordHasherMock = new Mock<IPasswordHasher>();
             UserServiceMock = new Mock<IUserService>();
+            SessionServiceMock = new Mock<ISessionService>();
+            QuizServiceMock = new Mock<IQuizService>();
+            QuestionServiceMock = new Mock<IQuestionService>();
         }
     }
 }
