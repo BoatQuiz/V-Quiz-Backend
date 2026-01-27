@@ -1,4 +1,5 @@
 ﻿using Moq;
+using V_Quiz_Backend.DTO;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
 
@@ -46,7 +47,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.Equal("Question not found.", result.Message);
 
         }
-
         [Fact]
         public async Task GetRandomQuestion_Should_ReturnQuestion_WhenAvailable()
         {
@@ -87,7 +87,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.True(result.Success);
             Assert.Equal("q2", result.Data.QuestionId);
         }
-
         [Fact]
         public async Task GetRandomQuestion_ShouldReturnFail_WhenNoQuestionsAvailable()
         {
@@ -118,6 +117,26 @@ namespace V_Quiz_Tests.ServiceTests
             // Assert
             Assert.False(result.Success);
             Assert.Null(result.Data);
+        }
+
+        [Fact]
+        public void ShuffleQuestion_Should_RandomizeOptions_And_UpdateCorrectIndex()
+        {
+            // Arrange
+            var question = new QuestionResponseDto
+            {
+                QuestionId = "q3",
+                QuestionText = "What is 2 + 2?",
+                Options = new List<string> { "3", "4", "5", "6" },
+                CorrectIndex = 1
+            };
+            // Act
+            var shuffledQuestion = QuestionService.ShuffleQuestion(question);
+            // Assert
+            Assert.Equal(4, shuffledQuestion.Options.Count);
+            Assert.Contains("4", shuffledQuestion.Options);
+            Assert.InRange(shuffledQuestion.CorrectIndex, 0, 3);
+            Assert.Equal("4", shuffledQuestion.Options[shuffledQuestion.CorrectIndex]);
         }
     }
 }
