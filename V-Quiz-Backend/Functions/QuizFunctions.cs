@@ -64,5 +64,15 @@ namespace V_Quiz_Backend.Functions
             await response.WriteAsJsonAsync(responseObj);
             return response;
         }
+
+        [Function("GetMetaData")]
+        public async Task<HttpResponseData> GetMetadataAsync(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "quiz/metadata")] HttpRequestData req)
+        {
+            var metadataResponse = await quizService.GetQuizMetaDataAsync();
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            await response.WriteAsJsonAsync(metadataResponse);
+            return response;
+        }
     }
 }

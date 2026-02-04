@@ -178,5 +178,9 @@ namespace V_Quiz_Backend.Services
             });
         }
 
+        public async Task<ServiceResponse<QuizMetaDataDto>> GetQuizMetaDataAsync()
+        {
+            return await _questionService.GetQuizMetaDataAsync();
+        }
     }
 }

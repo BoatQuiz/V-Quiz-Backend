@@ -22,7 +22,7 @@ namespace V_Quiz_Backend.Services
             return ServiceResponse<Question>.Ok(question);
         }
 
-        public async Task <ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(Session session)
+        public async Task<ServiceResponse<QuestionResponseDto>> GetRandomQuestionAsync(Session session)
         {
             var filter = new QuestionFilter
             {
@@ -33,12 +33,12 @@ namespace V_Quiz_Backend.Services
             };
 
             var question = await _repo.GetRandomQuestionAsync(filter);
-            
+
             if (question == null)
             {
                 return ServiceResponse<QuestionResponseDto>.Fail("No more questions available.");
             }
-            
+
             return ServiceResponse<QuestionResponseDto>.Ok(new QuestionResponseDto
             {
                 QuestionId = question.QuestionId,
@@ -52,9 +52,9 @@ namespace V_Quiz_Backend.Services
         {
             var rnd = new Random();
             var options = question.Options
-                .Select((text, index) => new 
-                { 
-                    Text = text, 
+                .Select((text, index) => new
+                {
+                    Text = text,
                     IsCorrect = index == question.CorrectIndex
                 })
                 .OrderBy(_ => rnd.Next())
@@ -64,6 +64,29 @@ namespace V_Quiz_Backend.Services
             question.CorrectIndex = options.FindIndex(o => o.IsCorrect);
 
             return question;
+        }
+
+        public async Task<ServiceResponse<QuizMetaDataDto>> GetQuizMetaDataAsync()
+        {
+            var rawData = await _repo.GetQuizMetaDataAsync();
+
+            var audiences = rawData
+                .SelectMany(q =>
+                    q.Audience.Select(a => new { Audience = a, Categories = q.Category }))
+                .GroupBy(ac => ac.Audience)
+                .Select(g => new AudienceMetaDto
+                {
+                    Name = g.Key,
+                    Categories = g
+                    .SelectMany(ac => ac.Categories)
+                    .Distinct()
+                    .OrderBy(c => c)
+                    .ToList()
+                })
+                .OrderBy(a => a.Name)
+                .ToList();
+
+            return new ServiceResponse<QuizMetaDataDto> { Data = new QuizMetaDataDto { Audiences = audiences }, Success = true };
         }
     }
 }

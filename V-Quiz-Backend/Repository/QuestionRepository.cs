@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using V_Quiz_Backend.DTO;
 using V_Quiz_Backend.Interface.Repos;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
@@ -51,7 +52,7 @@ namespace V_Quiz_Backend.Repository
             {
                 mongoFilter &= Builders<Question>.Filter.Eq(q => q.Difficulty, filter.Difficulty.Value);
             }
-            
+
             if (filter.Audience?.Any() == true)
             {
                 mongoFilter &= Builders<Question>.Filter.AnyEq(q => q.Audience, filter.Audience);
@@ -64,5 +65,16 @@ namespace V_Quiz_Backend.Repository
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<List<QuizMetadataProjection>> GetQuizMetaDataAsync()
+        {
+            return await _collection
+                .Find(q => q.IsActive)
+                .Project(q => new QuizMetadataProjection
+                {
+                    Audience = q.Audience,
+                    Category = q.Category
+                })
+                .ToListAsync();
+        }
     }
 }
