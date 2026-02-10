@@ -4,6 +4,7 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Text.Json;
+using V_Quiz_Backend.Context;
 using V_Quiz_Backend.DTO;
 using V_Quiz_Backend.Interface.Services;
 using V_Quiz_Backend.Services;
@@ -26,24 +27,25 @@ public class UserFunctions
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "user/quiz-profile")]
         HttpRequestData req)
     {
-        var userId = GetUserId(req);
+        //_logger.LogInformation(
+        //    "Raw Cookie header: {cookie}",
+        //    req.Headers.TryGetValues("Cookie", out var c)
+        //    ? string.Join(",", c) : "NONE");
+
+        //_logger.LogInformation("Cookie count: {countCount}",
+        //    req.Cookies.Count); 
+
+        var userId = UserContext.TryGetUserId(req);
+
+        //_logger.LogInformation(
+        //    "Resolved UserId: {userId",
+        //    userId.ToString() ?? "NULL");
+
         var profile = await _userService.GetQuizProfileAsync(userId);
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         await response.WriteAsJsonAsync(profile);
         return response;
-    }
-
-    private Guid GetUserId(HttpRequestData req)
-    {
-       var query = System.Web.HttpUtility.ParseQueryString(req.Url.Query);
-        var userIdString = query["userId"];
-
-        if (string.IsNullOrEmpty(userIdString))
-        {
-            throw new InvalidOperationException("userId is required in query parameters.");
-        }
-        return Guid.Parse(userIdString);
     }
 
     [Function("UserRegister")]
