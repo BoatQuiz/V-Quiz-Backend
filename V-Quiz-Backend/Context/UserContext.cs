@@ -1,4 +1,7 @@
 ﻿using Microsoft.Azure.Functions.Worker.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using V_Quiz_Backend.Models;
 
 namespace V_Quiz_Backend.Context
 {
@@ -6,20 +9,41 @@ namespace V_Quiz_Backend.Context
     {
         public static Guid? TryGetUserId(HttpRequestData req)
         {
-            // 1. Cookie (Isolated Worker)
-            var userCookie = req.Cookies.FirstOrDefault(c => c.Name == "userId");
-            if (userCookie != null && Guid.TryParse(userCookie.Value, out var userId)) { return userId; }
-            
+            var cookie = req.Cookies.FirstOrDefault(c => c.Name == "user_identity");
+            if (cookie == null)
+                return null;
 
-            // 2. DEV-Header
-            if (req.Headers.TryGetValues("X-User-Id", out var values) && Guid.TryParse(values.FirstOrDefault(), out var headerUserId))
+            try
             {
-                return headerUserId;
-            }
-            
+                // 1. URL-dekoda
+                var decoded = Uri.UnescapeDataString(cookie.Value);
 
-            // 3. Framtida auth(JWT / Entra ID)
-            return null;
+                // 2. OM det är JSON-in-string → packa upp
+                if (decoded.StartsWith("\""))
+                {
+                    decoded = JsonSerializer.Deserialize<string>(decoded);
+                }
+
+                // 3. NU är decoded alltid riktig JSON
+                var identity = JsonSerializer.Deserialize<UserIdentity>(decoded);
+
+                // 4. Returnera Guid
+                return identity != null && Guid.TryParse(identity.UserId, out var userId)
+                    ? userId
+                    : null;
+
+            }
+            catch
+            {
+                return null;
+            }
         }
+    }
+    public class UserIdentity
+    {
+        [JsonPropertyName("userId")]
+        public string UserId { get; set; } = default!;
+        [JsonPropertyName("username")]
+        public string Username { get; set; } = default!;
     }
 }
