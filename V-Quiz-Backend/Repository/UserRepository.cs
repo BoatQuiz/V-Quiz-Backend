@@ -48,5 +48,20 @@ namespace V_Quiz_Backend.Repository
                 })
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<QuizProfile> UpdateQuizProfileAsync(Guid userId, QuizProfile profile)
+        {
+            var update = Builders<UserEntity>.Update
+                .Set(u => u.QuizProfile, profile)
+                .Set(u => u.UpdatedAt, DateTime.UtcNow);
+
+            await _collection.UpdateOneAsync(
+                u => u.UserId == userId,
+                update
+                );
+
+            return profile;
+                
+        }
     }
 }

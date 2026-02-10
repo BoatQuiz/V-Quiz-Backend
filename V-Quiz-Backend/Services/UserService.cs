@@ -102,5 +102,31 @@ namespace V_Quiz_Backend.Services
             }
             return ServiceResponse<SessionUser>.Ok(user, "Session user retrieved successfully");
         }
+
+        public async Task<ServiceResponse> UpdateQuizProfileAsync(Guid? userId, QuizProfileDto profile)
+        {
+            if (!userId.HasValue) 
+            {
+                return ServiceResponse.Fail("User Id is missing");
+            }
+
+            if (!profile || !profile.Audience || !profile.Categories) 
+            {
+                return ServiceResponse.Fail("Missing quizProfil");
+            }
+
+            var user = repo.GetSessionUserAsync(userId.Value);
+            if (user == null)
+            {
+                return ServiceResponse.Fail("Could not find user");
+            }
+
+            
+        }
+
+        public Task<ServiceResponse<UserEntity>> GetUserEntityAsync(Guid userId)
+        {
+           var userEntity = repo.
+        }
     }
 }

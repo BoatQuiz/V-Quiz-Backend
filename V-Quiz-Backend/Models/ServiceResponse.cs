@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace V_Quiz_Backend.Models
+﻿namespace V_Quiz_Backend.Models
 {
     public class ServiceResponse<T>
     {
@@ -21,13 +15,39 @@ namespace V_Quiz_Backend.Models
             };
         }
 
-        public static ServiceResponse<T> Ok(T data, string? message=null)
+        public static ServiceResponse<T> Ok(T data, string? message = null)
         {
             return new ServiceResponse<T>
             {
                 Success = true,
                 Data = data,
                 Message = message
+            };
+        }
+
+    }
+    public class ServiceResponse
+    {
+
+        public bool Success { get; set; } = true;
+        public string? Message { get; set; }
+
+        public static ServiceResponse Ok(string? message = null)
+        {
+            return new ServiceResponse
+            {
+                Success = true,
+
+                Message = message
+            };
+        }
+
+        public static ServiceResponse Fail(string message)
+        {
+            return new ServiceResponse 
+            { 
+                Message = message, 
+                Success = false 
             };
         }
     }
