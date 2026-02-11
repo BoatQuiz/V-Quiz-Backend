@@ -1,5 +1,4 @@
-﻿using V_Quiz_Backend.DTO;
-using V_Quiz_Backend.Models;
+﻿using V_Quiz_Backend.Models;
 
 namespace V_Quiz_Backend.Interface.Repos
 {

@@ -69,16 +69,9 @@ public class UserFunctions
 
     [Function("UpdateQuizProfile")]
     public async Task<HttpResponseData> UpdateQuizProfile(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post,", Route = "user/UpdateQuizProfile")] HttpRequestData req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "user/UpdateQuizProfile")] HttpRequestData req)
     {
         var userId = UserContext.TryGetUserId(req);
-        // Denna kanske inte skall komma vidare om det inte finns ett id
-        //if (userId == null)
-        //{
-        //    var badRequest = req.CreateResponse(HttpStatusCode.BadRequest);
-        //    await badRequest.WriteStringAsync("Invalid userId");
-        //    return badRequest;
-        //}
 
         var body = await JsonSerializer.DeserializeAsync<QuizProfileDto>(req.Body);
         if (body == null) {
@@ -88,5 +81,9 @@ public class UserFunctions
         }
 
         var profile = await _userService.UpdateQuizProfileAsync(userId,body);
+        var response = req.CreateResponse(HttpStatusCode.OK);
+
+        await response.WriteAsJsonAsync(profile);
+        return response;
     }
 }
