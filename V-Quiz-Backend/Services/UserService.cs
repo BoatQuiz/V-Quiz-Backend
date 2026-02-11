@@ -110,11 +110,6 @@ namespace V_Quiz_Backend.Services
                 return ServiceResponse.Fail("User Id is missing");
             }
 
-            //if (!profile || !profile.Audience || !profile.Categories) 
-            //{
-            //    return ServiceResponse.Fail("Missing quizProfil");
-            //}
-
             var user = await GetUserEntityAsync(userId.Value);
             if (user == null || user.Data == null)
             {

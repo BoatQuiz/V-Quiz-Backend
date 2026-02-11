@@ -294,5 +294,43 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.Null(result.Data);
             Assert.Equal("Quiz profile not found", result.Message);
         }
+
+        [Fact]
+        public async Task GetUserByIdAsync_IfUserIsInDatabase_ReturnUserEntity()
+        {
+            // Arrange
+            var user = new UserEntity { UserId = Guid.NewGuid() };
+            var userId = Guid.NewGuid();
+            UserRepoMock
+                .Setup(repo => repo.GetUserByIdAsync(userId))
+                .ReturnsAsync(user);
+
+            var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+
+            // Act
+            var result = await service.GetUserEntityAsync(userId);
+            // Assert
+            Assert.True(result.Success);
+            Assert.Equal(userId, result.Data.UserId);
+        }
+        [Fact]
+        public async Task GetUserByIdAsync_IfUserIsNull_ReturnServiceResponseFail()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            UserRepoMock
+                .Setup(repo => repo.GetUserByIdAsync(userId))
+                .ReturnsAsync((UserEntity?)null);
+
+            var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+
+            // Act
+            var result = await service.GetUserEntityAsync(userId);
+
+            // Assert
+            Assert.False(result.Success);
+            Assert.Equal(result.Message, "User could not be found");
+
+        }
     }
 }
