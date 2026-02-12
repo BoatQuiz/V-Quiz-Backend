@@ -249,7 +249,7 @@ namespace V_Quiz_Tests.ServiceTests
             // Assert
             Assert.True(result.Success);
             Assert.NotNull(result.Data);
-            Assert.Equal("general", result.Data.Audience);
+            Assert.Equal("General", result.Data.Audience);
             Assert.Empty(result.Data.Categories);
             Assert.Equal("Default quiz profile retrieved successfully", result.Message);
         }
@@ -299,8 +299,8 @@ namespace V_Quiz_Tests.ServiceTests
         public async Task GetUserByIdAsync_IfUserIsInDatabase_ReturnUserEntity()
         {
             // Arrange
-            var user = new UserEntity { UserId = Guid.NewGuid() };
             var userId = Guid.NewGuid();
+            var user = new UserEntity { UserId = userId };
             UserRepoMock
                 .Setup(repo => repo.GetUserByIdAsync(userId))
                 .ReturnsAsync(user);
