@@ -1,5 +1,4 @@
 ﻿using MongoDB.Driver;
-using V_Quiz_Backend.DTO;
 using V_Quiz_Backend.Interface.Repos;
 using V_Quiz_Backend.Models;
 using V_Quiz_Backend.Services;
@@ -13,7 +12,7 @@ namespace V_Quiz_Backend.Repository
         public async Task CreateUserAsync(UserEntity user)
         {
             await _collection.InsertOneAsync(user);
-            
+
             // Denna skulle kunna byggas om för att få en bekräftelde på att det inte blir fel
         }
 
@@ -46,6 +45,28 @@ namespace V_Quiz_Backend.Repository
                     Audience = user.QuizProfile.Audience,
                     Categories = user.QuizProfile.Categories
                 })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<QuizProfile> UpdateQuizProfileAsync(Guid userId, QuizProfile profile)
+        {
+            var update = Builders<UserEntity>.Update
+                .Set(u => u.QuizProfile, profile)
+                .Set(u => u.UpdatedAt, DateTime.UtcNow);
+
+            await _collection.UpdateOneAsync(
+                u => u.UserId == userId,
+                update
+                );
+
+            return profile;
+
+        }
+
+        public async Task<UserEntity> GetUserByIdAsync(Guid userId)
+        {
+            return await _collection
+                .Find(u => u.UserId == userId)
                 .FirstOrDefaultAsync();
         }
     }

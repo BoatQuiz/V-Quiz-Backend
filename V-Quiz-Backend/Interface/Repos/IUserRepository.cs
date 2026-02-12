@@ -1,5 +1,4 @@
-﻿using V_Quiz_Backend.DTO;
-using V_Quiz_Backend.Models;
+﻿using V_Quiz_Backend.Models;
 
 namespace V_Quiz_Backend.Interface.Repos
 {
@@ -9,5 +8,7 @@ namespace V_Quiz_Backend.Interface.Repos
         Task CreateUserAsync(UserEntity user);
         Task<QuizProfile> GetQuizProfileAsync(Guid userId);
         Task<SessionUser> GetSessionUserAsync(Guid userId);
+        Task<QuizProfile> UpdateQuizProfileAsync(Guid userId, QuizProfile quizProfile);
+        Task<UserEntity> GetUserByIdAsync(Guid userId);
     }
 }

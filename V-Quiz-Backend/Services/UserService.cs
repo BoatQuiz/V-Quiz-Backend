@@ -16,7 +16,7 @@ namespace V_Quiz_Backend.Services
             {
                 var userProfile = new QuizProfile
                 {
-                    Audience = "general",
+                    Audience = "General",
                     Categories = []
                 };
                 return ServiceResponse<QuizProfile>.Ok(userProfile, "Default quiz profile retrieved successfully");
@@ -101,6 +101,36 @@ namespace V_Quiz_Backend.Services
                 return ServiceResponse<SessionUser>.Fail("User not found");
             }
             return ServiceResponse<SessionUser>.Ok(user, "Session user retrieved successfully");
+        }
+
+        public async Task<ServiceResponse> UpdateQuizProfileAsync(Guid? userId, QuizProfileDto profile)
+        {
+            if (!userId.HasValue)
+            {
+                return ServiceResponse.Fail("User Id is missing");
+            }
+
+            var user = await GetUserEntityAsync(userId.Value);
+            if (user == null || user.Data == null)
+            {
+                return ServiceResponse.Fail("Could not find user");
+            }
+                user.Data.QuizProfile.Categories = profile.Categories;
+                user.Data.QuizProfile.Audience = profile.Audience;
+                user.Data.UpdatedAt = DateTime.UtcNow;
+
+            await repo.UpdateQuizProfileAsync(userId.Value, user.Data.QuizProfile);
+            return ServiceResponse.Ok("QuizProfile updated");
+        }
+
+        public async Task<ServiceResponse<UserEntity>> GetUserEntityAsync(Guid userId)
+        {
+            var userEntity = await repo.GetUserByIdAsync(userId);
+            if (userEntity == null)
+            {
+                return ServiceResponse<UserEntity>.Fail("User could not be found");
+            }
+            return ServiceResponse<UserEntity>.Ok(userEntity);
         }
     }
 }

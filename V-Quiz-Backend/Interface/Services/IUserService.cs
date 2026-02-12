@@ -10,5 +10,7 @@ namespace V_Quiz_Backend.Interface.Services
 
         Task<ServiceResponse<QuizProfile>> GetQuizProfileAsync(Guid? userId);
         Task<ServiceResponse<SessionUser>> GetSessionUserAsync(Guid userId);
+        Task<ServiceResponse> UpdateQuizProfileAsync(Guid? userId, QuizProfileDto profile);
+        Task<ServiceResponse<UserEntity>> GetUserEntityAsync(Guid userId);
     }
 }

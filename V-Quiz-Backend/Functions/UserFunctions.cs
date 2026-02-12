@@ -27,19 +27,7 @@ public class UserFunctions
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "user/quiz-profile")]
         HttpRequestData req)
     {
-        //_logger.LogInformation(
-        //    "Raw Cookie header: {cookie}",
-        //    req.Headers.TryGetValues("Cookie", out var c)
-        //    ? string.Join(",", c) : "NONE");
-
-        //_logger.LogInformation("Cookie count: {countCount}",
-        //    req.Cookies.Count); 
-
         var userId = UserContext.TryGetUserId(req);
-
-        //_logger.LogInformation(
-        //    "Resolved UserId: {userId",
-        //    userId.ToString() ?? "NULL");
 
         var profile = await _userService.GetQuizProfileAsync(userId);
 
@@ -76,6 +64,26 @@ public class UserFunctions
             response = req.CreateResponse(HttpStatusCode.BadRequest);
         }
         await response.WriteAsJsonAsync(result);
+        return response;
+    }
+
+    [Function("UpdateQuizProfile")]
+    public async Task<HttpResponseData> UpdateQuizProfile(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "user/UpdateQuizProfile")] HttpRequestData req)
+    {
+        var userId = UserContext.TryGetUserId(req);
+
+        var body = await JsonSerializer.DeserializeAsync<QuizProfileDto>(req.Body);
+        if (body == null) {
+            var badRequest = req.CreateResponse(HttpStatusCode.BadRequest);
+            await badRequest.WriteStringAsync("Invalid request body");
+            return badRequest;
+        }
+
+        var profile = await _userService.UpdateQuizProfileAsync(userId,body);
+        var response = req.CreateResponse(HttpStatusCode.OK);
+
+        await response.WriteAsJsonAsync(profile);
         return response;
     }
 }
