@@ -16,7 +16,7 @@ namespace V_Quiz_Backend.Services
             {
                 var userProfile = new QuizProfile
                 {
-                    Audience = "general",
+                    Audience = "General",
                     Categories = []
                 };
                 return ServiceResponse<QuizProfile>.Ok(userProfile, "Default quiz profile retrieved successfully");

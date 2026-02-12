@@ -27,7 +27,7 @@ namespace V_Quiz_Backend.Models
         public int Difficulty { get; set; } = 1;
 
         [BsonElement("audience")]
-        public List<string> Audience { get; set; } = [ "general"];
+        public List<string> Audience { get; set; } = [ "General"];
 
         [BsonElement("rank")]
         public List<string> Rank { get; set; } = [];

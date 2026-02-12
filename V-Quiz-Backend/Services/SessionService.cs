@@ -26,7 +26,7 @@ namespace V_Quiz_Backend.Services
                 Player = new SessionUser
                 {
                     UserId = userId,
-                    Audience = quizProfileResponse.Data.Audience ?? "general",
+                    Audience = quizProfileResponse.Data.Audience ?? "General",
                     Categories = quizProfileResponse.Data.Categories,
                 },
                 StartedAtUtc = DateTime.UtcNow,
