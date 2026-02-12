@@ -73,7 +73,15 @@ public class UserFunctions
     {
         var userId = UserContext.TryGetUserId(req);
 
-        var body = await JsonSerializer.DeserializeAsync<QuizProfileDto>(req.Body);
+        
+        
+        var body = await JsonSerializer.DeserializeAsync<QuizProfileDto>(
+            req.Body,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            });
+
         if (body == null) {
             var badRequest = req.CreateResponse(HttpStatusCode.BadRequest);
             await badRequest.WriteStringAsync("Invalid request body");
