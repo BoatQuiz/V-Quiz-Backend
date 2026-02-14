@@ -498,5 +498,42 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.Equal("Failed to set current question in session.", result.Message);
         }
 
+        [Fact]
+        public async Task GetQuizMetaDataAsync()
+        {
+
+            // Arrange
+            var metaData = new QuizMetaDataDto
+            {
+                Audiences = new List<AudienceMetaDto>
+                {
+                    new AudienceMetaDto
+                    {
+
+                    Name = "Shipping", Categories = ["Language"]
+                    }
+                }
+            };
+
+            var serviceResponse = ServiceResponse<QuizMetaDataDto>.Ok(metaData);
+
+            QuestionServiceMock
+                .Setup(q => q.GetQuizMetaDataAsync())
+                .ReturnsAsync(serviceResponse);
+            
+            var quizService = new QuizService(
+               SessionServiceMock.Object,
+               QuestionServiceMock.Object);
+
+            // Act
+            var result = await quizService.GetQuizMetaDataAsync();
+
+            // Assert
+            Assert.True(result.Success);
+            Assert.Equal("Shipping", result.Data.Audiences[0].Name);
+            Assert.NotNull(result.Data);
+            Assert.Single(result.Data.Audiences);
+        }
+
     }
 }

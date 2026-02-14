@@ -313,24 +313,83 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.True(result.Success);
             Assert.Equal(userId, result.Data.UserId);
         }
+        
         [Fact]
-        public async Task GetUserByIdAsync_IfUserIsNull_ReturnServiceResponseFail()
+        public async Task UpdateQuizProfileAsync_IfUserValueIsMissing_ShouldReturnFail()
+        {
+
+            // Arrange
+            var userId = Guid.Empty;
+            var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+
+            // Act
+            var result = await service.GetQuizProfileAsync(userId);
+
+            // Assert
+            Assert.False(result.Success);
+            Assert.Equal("Quiz profile not found", result.Message);
+        }
+
+        [Fact]
+        public async Task UpdateQuizProfileAsync_IfUserIIdIsMissing_ShouldReturnFail()
         {
             // Arrange
-            var userId = Guid.NewGuid();
-            UserRepoMock
-                .Setup(repo => repo.GetUserByIdAsync(userId))
-                .ReturnsAsync((UserEntity?)null);
+            var userId = Guid.Empty;
+
+            var quizProfile = new QuizProfileDto { Audience = "General", Categories = ["Language"] };
+
+            UserServiceMock
+                .Setup(u => u.GetUserEntityAsync(userId))
+                .ReturnsAsync((ServiceResponse<UserEntity>?)null);
 
             var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
 
             // Act
-            var result = await service.GetUserEntityAsync(userId);
+            var result = await service.UpdateQuizProfileAsync(userId, quizProfile);
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal(result.Message, "User could not be found");
+            Assert.Equal("Could not find user",  result.Message);
+        }
 
+        [Fact]
+        public async Task UpdateQuizProfileAsync_ShuldReturnSuccess_IfAllIsGood()
+        {
+            // Arrange
+            var profile = new QuizProfileDto 
+            { 
+                Audience = "General", 
+                Categories = ["Language"] 
+            };
+
+            var userId = Guid.NewGuid();
+
+            var user = new UserEntity 
+            { 
+                UserId = userId, 
+                QuizProfile = new QuizProfile 
+                { 
+                    Audience = "Shipping", 
+                    Categories = ["Navigation"] 
+                },  
+            };
+
+            UserRepoMock
+                .Setup(u => u.GetUserByIdAsync(userId))
+                .ReturnsAsync(user);
+
+            UserRepoMock
+                .Setup(r => r.UpdateQuizProfileAsync(userId, It.IsAny<QuizProfile>()))
+                .ReturnsAsync((Guid id, QuizProfile qp) => qp);
+
+            var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+
+            // Act
+            var result = await service.UpdateQuizProfileAsync(userId, profile);
+
+            // Assert
+            Assert.True(result.Success);
+            Assert.Equal("QuizProfile updated", result.Message);
         }
     }
 }
