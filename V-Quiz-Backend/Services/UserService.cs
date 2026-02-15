@@ -105,21 +105,16 @@ namespace V_Quiz_Backend.Services
 
         public async Task<ServiceResponse> UpdateQuizProfileAsync(Guid? userId, QuizProfileDto profile)
         {
-            if (!userId.HasValue)
-            {
-                return ServiceResponse.Fail("User Id is missing");
-            }
-
             var user = await GetUserEntityAsync(userId.Value);
-            if (user == null || user.Data == null)
+            if (!user.Success)
             {
                 return ServiceResponse.Fail("Could not find user");
             }
-                user.Data.QuizProfile.Categories = profile.Categories;
-                user.Data.QuizProfile.Audience = profile.Audience;
-                user.Data.UpdatedAt = DateTime.UtcNow;
+            user.Data.QuizProfile.Categories = profile.Categories;
+            user.Data.QuizProfile.Audience = profile.Audience;
+            user.Data.UpdatedAt = DateTime.UtcNow;
 
-            await repo.UpdateQuizProfileAsync(userId.Value, user.Data.QuizProfile);
+            await repo.UpdateQuizProfileAsync(user.Data.UserId, user.Data.QuizProfile);
             return ServiceResponse.Ok("QuizProfile updated");
         }
 

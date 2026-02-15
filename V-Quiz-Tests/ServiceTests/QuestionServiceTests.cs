@@ -118,7 +118,6 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.False(result.Success);
             Assert.Null(result.Data);
         }
-
         [Fact]
         public void ShuffleQuestion_Should_RandomizeOptions_And_UpdateCorrectIndex()
         {
@@ -137,6 +136,50 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.Contains("4", shuffledQuestion.Options);
             Assert.InRange(shuffledQuestion.CorrectIndex, 0, 3);
             Assert.Equal("4", shuffledQuestion.Options[shuffledQuestion.CorrectIndex]);
+        }
+
+        [Fact]
+        public async Task GetQuizMetaDataAsync_Should_ReturnCorrectIndex()
+        {
+            // Arrange
+            var projection = new List<QuizMetadataProjection>
+            {   new()
+                {
+                    Audience = ["General"],
+                    Category = ["Language"]
+                },
+                new() {
+                Audience = ["Shipping"],
+                Category = ["Navigation"]
+                }
+            };
+            QuestionRepoMock
+                .Setup(r => r.GetQuizMetaDataAsync())
+                .ReturnsAsync(projection);
+
+            var service = new QuestionService(QuestionRepoMock.Object);
+            
+            // Act
+            var result = await service.GetQuizMetaDataAsync();
+
+            // Assert
+            Assert.True(result.Success);
+            Assert.NotNull(result.Data);
+            Assert.Equal("General", result.Data.Audiences[0].Name);
+        }
+        [Fact]
+        public async Task GetQuizMetaDataAsync_IfRawDataIsNull_ShouldReturnFail() {
+            QuestionRepoMock
+                    .Setup(r => r.GetQuizMetaDataAsync())
+                    .ReturnsAsync(new List<QuizMetadataProjection>());
+
+            var service = new QuestionService (QuestionRepoMock.Object);
+
+            var result = await service.GetQuizMetaDataAsync();
+
+            Assert.True(result.Success);
+            Assert.NotNull(result.Data);
+            Assert.Empty(result.Data.Audiences);
         }
     }
 }

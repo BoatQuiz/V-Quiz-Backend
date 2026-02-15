@@ -9,13 +9,13 @@ namespace V_Quiz_Tests
     {
         protected readonly Mock<IFlagRepository> FlagRepoMock;
         protected readonly Mock<ISessionRepository> SessionRepoMock;
-        protected readonly Mock<IQuestionRepository> QuestionRepoMock;
-        protected readonly Mock<IUserRepository> UserRepoMock;
-        protected readonly Mock<IPasswordHasher> PasswordHasherMock;
-        protected readonly Mock<IUserService> UserServiceMock;
         protected readonly Mock<ISessionService> SessionServiceMock;
-        protected readonly Mock<IQuizService> QuizServiceMock;
+        protected readonly Mock<IQuestionRepository> QuestionRepoMock;
         protected readonly Mock<IQuestionService> QuestionServiceMock;
+        protected readonly Mock<IPasswordHasher> PasswordHasherMock;
+        protected readonly Mock<IUserRepository> UserRepoMock;
+        protected readonly Mock<IUserService> UserServiceMock;
+        protected readonly Mock<IQuizService> QuizServiceMock;
 
         protected TestBase()
         {
