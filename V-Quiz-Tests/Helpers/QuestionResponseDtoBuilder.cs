@@ -7,7 +7,7 @@ namespace V_Quiz_Tests.Helpers
         private string _questionId = "q1";
         private string _questionText = "What is the capital of France?";
         private List<string> _options = new() { "Berlin", "Madrid", "Paris", "Rome" };
-        private List<string> _category = new() { "Geography" };
+        private string _category = "Geography";
         private int _correctIndex = 0;
 
         public QuestionResponseDtoBuilder WithId(string id)

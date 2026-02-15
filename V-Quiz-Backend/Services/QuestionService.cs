@@ -45,6 +45,7 @@ namespace V_Quiz_Backend.Services
                 QuestionText = question.Text,
                 Options = question.Options,
                 CorrectIndex = question.CorrectIndex,
+                Category = question.Category
             });
         }
 
@@ -70,16 +71,13 @@ namespace V_Quiz_Backend.Services
         {
             var rawData = await _repo.GetQuizMetaDataAsync();
             
-
             var audiences = rawData
-                .SelectMany(q =>
-                    q.Audience.Select(a => new { Audience = a, Categories = q.Category }))
-                .GroupBy(ac => ac.Audience)
+                .GroupBy(q => q.Audience)
                 .Select(g => new AudienceMetaDto
                 {
                     Name = g.Key,
                     Categories = g
-                    .SelectMany(ac => ac.Categories)
+                    .Select(q => q.Category)
                     .Distinct()
                     .OrderBy(c => c)
                     .ToList()

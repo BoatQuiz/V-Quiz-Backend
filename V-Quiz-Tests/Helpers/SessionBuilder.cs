@@ -34,7 +34,7 @@ namespace V_Quiz_Tests.Helpers
                 {
                     QuestionId = $"q{i}",
                     AnsweredCorrectly = answeredCorrectly,
-                    Category = ["science"],
+                    Category = "science",
                     TimeMs = 1000
                 }).ToList();
             return this;
@@ -49,7 +49,7 @@ namespace V_Quiz_Tests.Helpers
             {
                 QuestionId = questionId,
                 CorrectIndex = correctIndex,
-                Category = [category],
+                Category = category,
                 AskedAtUtc = DateTime.UtcNow.AddSeconds(-5)
             };
             return this;

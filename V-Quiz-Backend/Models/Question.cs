@@ -1,10 +1,5 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace V_Quiz_Backend.Models
 {
@@ -18,7 +13,7 @@ namespace V_Quiz_Backend.Models
         public string QuestionId { get; set; } = string.Empty;
 
         [BsonElement("category")]
-        public List<string> Category { get; set; } = [];
+        public string Category { get; set; } = string.Empty;
 
         [BsonElement("subcategory")]
         public List<string>? Subcategory { get; set; } = [];
@@ -27,7 +22,7 @@ namespace V_Quiz_Backend.Models
         public int Difficulty { get; set; } = 1;
 
         [BsonElement("audience")]
-        public List<string> Audience { get; set; } = [ "General"];
+        public string Audience { get; set; } = string.Empty;
 
         [BsonElement("rank")]
         public List<string> Rank { get; set; } = [];

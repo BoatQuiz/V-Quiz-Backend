@@ -10,7 +10,7 @@ namespace V_Quiz_Backend.DTO
     {
         public string QuestionId { get; set; }
         public string QuestionText { get; set; }
-        public List<string>? Category { get; set; }
+        public string Category { get; set; }
         public List<string> Options { get; set; }
         public int CorrectIndex { get; set; }
     }

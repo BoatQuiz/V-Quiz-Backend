@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace V_Quiz_Backend.Models
+﻿namespace V_Quiz_Backend.Models
 {
     public class UsedQuestion
     {
         public string QuestionId { get; set; } = string.Empty;
-        public List<string>? Category { get; set; } 
+        public string Category { get; set; } = string.Empty;
         public bool AnsweredCorrectly { get; set; } = false;
         
         // Backend-only messuring

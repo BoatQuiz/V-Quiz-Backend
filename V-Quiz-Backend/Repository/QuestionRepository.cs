@@ -45,7 +45,7 @@ namespace V_Quiz_Backend.Repository
 
             if (filter.AllowedCategories?.Any() == true)
             {
-                mongoFilter &= Builders<Question>.Filter.AnyIn(q => q.Category, filter.AllowedCategories);
+                mongoFilter &= Builders<Question>.Filter.In(q => q.Category, filter.AllowedCategories);
             }
 
             if (filter.Difficulty.HasValue)
@@ -55,7 +55,7 @@ namespace V_Quiz_Backend.Repository
 
             if (filter.Audience?.Any() == true)
             {
-                mongoFilter &= Builders<Question>.Filter.AnyEq(q => q.Audience, filter.Audience);
+                mongoFilter &= Builders<Question>.Filter.Eq(q => q.Audience, filter.Audience);
             }
 
             return await _collection

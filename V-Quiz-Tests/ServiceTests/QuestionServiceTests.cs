@@ -57,7 +57,7 @@ namespace V_Quiz_Tests.ServiceTests
                 Text = "Capital of Sweden?",
                 Options = ["Stockholm", "Oslo"],
                 CorrectIndex = 0,
-                Category = ["Geography"]
+                Category = "Geography"
             };
 
             var filter = new QuestionFilter
@@ -145,12 +145,12 @@ namespace V_Quiz_Tests.ServiceTests
             var projection = new List<QuizMetadataProjection>
             {   new()
                 {
-                    Audience = ["General"],
-                    Category = ["Language"]
+                    Audience = "General",
+                    Category = "Language"
                 },
                 new() {
-                Audience = ["Shipping"],
-                Category = ["Navigation"]
+                Audience = "Shipping",
+                Category = "Navigation"
                 }
             };
             QuestionRepoMock
