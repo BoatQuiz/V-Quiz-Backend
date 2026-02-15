@@ -122,5 +122,56 @@ namespace V_Quiz_Backend.Services
 
             await _repo.AppendUsedQuestionAsync(session.Id, usedQuestion, endSession);
         }
+
+        public async Task<ServiceResponse<SessionSummaryDto>> GetSessionSummaryAsync(Guid sessionId)
+        {
+            var user = await GetUserIdBySessionIdAsync(sessionId);
+            if (user == null)
+            {
+                return ServiceResponse<SessionSummaryDto>.Fail("User was not found");
+            }
+            var sessionResponse = await GetSessionByIdAsync(sessionId);
+            if (sessionResponse == null || sessionResponse.Data == null)
+            {
+                return ServiceResponse<SessionSummaryDto>.Fail("Session Could not be found");
+            }
+
+            var session = sessionResponse.Data;
+
+            if (session.EndedAtUtc == null)
+            {
+                return ServiceResponse<SessionSummaryDto>.Fail("Session is not completed");
+            }
+
+            var questions = session.UsedQuestions ?? new List<UsedQuestion>();
+
+            var categorySummaries = questions
+                .GroupBy(q => q.Category)
+                .Select(group =>
+                {
+                    var total = group.Count();
+                    var correct = group.Count(q => q.AnsweredCorrectly);
+
+                    return new CategorySummaryDto
+                    {
+                        Category = group.Key,
+                        Total = total,
+                        Correct = correct,
+                        Percent = total == 0 ? 0 : (int)Math.Round((double)correct / total * 100)
+                    };
+                })
+                .OrderBy(q => q.Category)
+                .ToList();
+
+            var summary = new SessionSummaryDto
+            {
+                TotalQuestions = questions.Count,
+                TotalCorrect = questions.Count(q => q.AnsweredCorrectly),
+                Audience = session.Player.Audience,
+                Categories = categorySummaries
+            };
+
+            return ServiceResponse<SessionSummaryDto>.Ok(summary);
+        }
     }
 }
