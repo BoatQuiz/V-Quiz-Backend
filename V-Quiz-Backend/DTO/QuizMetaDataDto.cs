@@ -8,12 +8,12 @@
     public class AudienceMetaDto
     {
         public string Name { get; set; } = null!;
-        public List<string> Categories { get; set; } = []; 
+        public List<string> Categories { get; set; } = [];
     }
 
     public class QuizMetadataProjection
     {
-        public List<string> Audience { get; set; } = null!;
-        public List<string> Category { get; set; } = null!;
+        public string Audience { get; set; } = null!;
+        public string Category { get; set; } = null!;
     }
 }
