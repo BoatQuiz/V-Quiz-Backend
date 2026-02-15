@@ -69,6 +69,7 @@ namespace V_Quiz_Backend.Services
         public async Task<ServiceResponse<QuizMetaDataDto>> GetQuizMetaDataAsync()
         {
             var rawData = await _repo.GetQuizMetaDataAsync();
+            
 
             var audiences = rawData
                 .SelectMany(q =>
