@@ -13,5 +13,6 @@ namespace V_Quiz_Backend.DTO
         public string Category { get; set; }
         public List<string> Options { get; set; }
         public int CorrectIndex { get; set; }
+        public int? TimeLimitMs { get; set; }
     }
 }

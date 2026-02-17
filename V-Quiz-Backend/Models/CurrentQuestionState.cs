@@ -6,7 +6,7 @@
         public string QuestionText { get; set; }
         public string Category { get; set; }
         public DateTime AskedAtUtc { get; set; }
-        public int? TimeLimitMS { get; set; }
+        public int? TimeLimitMs { get; set; }
 
         public List<string> ShuffledOptions { get; set; } = [];
 
