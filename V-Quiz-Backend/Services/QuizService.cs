@@ -60,7 +60,8 @@ namespace V_Quiz_Backend.Services
                 {
                     QuestionId = question.QuestionId,
                     QuestionText = question.QuestionText,
-                    Options = question.Options
+                    Options = question.Options,
+                    TimeLimitMs = 30000
                 }
             });
         }
@@ -118,7 +119,8 @@ namespace V_Quiz_Backend.Services
                 {
                     QuestionId = q.QuestionId,
                     QuestionText = q.QuestionText,
-                    Options = q.Options
+                    Options = q.Options,
+                    TimeLimitMs = 30000
                 }
             });
         }
@@ -149,6 +151,11 @@ namespace V_Quiz_Backend.Services
             bool isCorrect = request.SelectedAnswer == session.CurrentQuestion.CorrectIndex;
 
             var timeMs = (DateTime.UtcNow - session.CurrentQuestion.AskedAtUtc).TotalMilliseconds;
+            // 5.1 Kollar om frågan har tidsgräns och om tiden har gått ut, om tiden gått räknas det som fel svar
+            if (session.CurrentQuestion.TimeLimitMs.HasValue && timeMs > session.CurrentQuestion.TimeLimitMs.Value)
+            {
+                isCorrect = false;
+            }
 
             // 6. Skapa UsedQuestion
             var usedQuestion = new UsedQuestion

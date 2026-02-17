@@ -91,6 +91,7 @@ namespace V_Quiz_Backend.Services
                     ShuffledOptions = q.Options,
                     CorrectIndex = q.CorrectIndex,
                     AskedAtUtc = DateTime.UtcNow,
+                    TimeLimitMs = 30000   // Adding timelimit (30sek) to answered question
                 };
                 await _repo.SetCurrentQuestionAsync(sessionId, question);
                 return ServiceResponse<bool>.Ok(true, "Current question set successfully.");
