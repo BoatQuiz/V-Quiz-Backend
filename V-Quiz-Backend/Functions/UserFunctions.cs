@@ -7,7 +7,6 @@ using System.Text.Json;
 using V_Quiz_Backend.Context;
 using V_Quiz_Backend.DTO;
 using V_Quiz_Backend.Interface.Services;
-using V_Quiz_Backend.Services;
 
 namespace V_Quiz_Backend.Functions;
 
@@ -72,9 +71,6 @@ public class UserFunctions
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "user/UpdateQuizProfile")] HttpRequestData req)
     {
         var userId = UserContext.TryGetUserId(req);
-
-        
-        
         var body = await JsonSerializer.DeserializeAsync<QuizProfileDto>(
             req.Body,
             new JsonSerializerOptions

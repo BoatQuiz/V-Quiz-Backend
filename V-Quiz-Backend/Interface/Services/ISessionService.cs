@@ -10,5 +10,6 @@ namespace V_Quiz_Backend.Interface.Services
         Task<ServiceResponse<bool>> SetCurrentQuestionAsync(Guid sessionId, QuestionResponseDto question);
         Task<ServiceResponse<SessionIdentity>> GetUserIdBySessionIdAsync(Guid sessionId);
         Task AppendAnsweredQuestionAsync(Session session, UsedQuestion usedQuestion);
+        Task<ServiceResponse<SessionSummaryDto>> GetSessionSummaryAsync(Guid sessionId);
     }
 }
