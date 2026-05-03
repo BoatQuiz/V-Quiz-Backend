@@ -90,4 +90,30 @@ public class UserFunctions
         await response.WriteAsJsonAsync(profile);
         return response;
     }
+
+    [Function("GetCategoryStats")]
+    public async Task<HttpResponseData> GetCategoryStats(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "user/stats")] HttpRequestData req)
+    {
+        var userId = UserContext.TryGetUserId(req);
+        if (!userId.HasValue)
+
+        {
+            var unauthorized = req.CreateResponse(HttpStatusCode.Unauthorized);
+            await unauthorized.WriteStringAsync("User not logged in.");
+            return unauthorized;
+        }
+        
+        var result = await _userService.GetUserEntityAsync(userId.Value);
+        if (!result.Success)
+        {
+            var notFound = req.CreateResponse(HttpStatusCode.NotFound);
+            await notFound.WriteStringAsync("User not found.");
+            return notFound;
+        }
+
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        await response.WriteAsJsonAsync(result.Data.CategoryStats);
+        return response;
+    }
 }

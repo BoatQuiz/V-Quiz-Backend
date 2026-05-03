@@ -10,5 +10,6 @@ namespace V_Quiz_Backend.Interface.Repos
         Task<SessionUser> GetSessionUserAsync(Guid userId);
         Task<QuizProfile> UpdateQuizProfileAsync(Guid userId, QuizProfile quizProfile);
         Task<UserEntity> GetUserByIdAsync(Guid userId);
+        Task UpdateCategoryStatsAsync(Guid userID, Dictionary<string, Dictionary<string, CategoryStat>> updatedStats);
     }
 }

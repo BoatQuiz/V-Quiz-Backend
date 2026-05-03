@@ -69,5 +69,24 @@ namespace V_Quiz_Backend.Repository
                 .Find(u => u.UserId == userId)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task UpdateCategoryStatsAsync(Guid userId, Dictionary<string, Dictionary<string, CategoryStat>> updatedStats)
+        {
+            var updates = new List<UpdateDefinition<UserEntity>>();
+
+            foreach (var (audience , categories) in updatedStats)
+            {
+                foreach (var (category, stat) in categories)
+                {
+                    updates.Add(Builders<UserEntity>.Update
+                        .Set($"CategoryStats.{audience}.{category}.RecentAnswers", stat.RecentAnswers)
+                        .Set($"CategoryStats.{audience}.{category}.Percent", stat.Percent));
+                }
+            }
+            updates.Add(Builders<UserEntity>.Update.Set(u => u.UpdatedAt, DateTime.UtcNow));
+
+            var combined = Builders<UserEntity>.Update.Combine(updates);
+            await _collection.UpdateOneAsync(u => u.UserId == userId, combined);
+        }
     }
 }

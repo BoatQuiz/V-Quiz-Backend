@@ -122,6 +122,15 @@ namespace V_Quiz_Backend.Services
             bool endSession = session.UsedQuestions.Count + 1 >= session.TargetQuestionCount;
 
             await _repo.AppendUsedQuestionAsync(session.Id, usedQuestion, endSession);
+
+            if (endSession && session.Player.UserId.HasValue)
+            {
+                var allAnswered = session.UsedQuestions.Append(usedQuestion).ToList();
+                await _userService.UpdateCategoryStatsAsync(
+                    session.Player.UserId.Value, 
+                    session.Player.Audience,
+                    allAnswered);
+            }
         }
 
         public async Task<ServiceResponse<SessionSummaryDto>> GetSessionSummaryAsync(Guid sessionId)

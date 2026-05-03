@@ -127,5 +127,36 @@ namespace V_Quiz_Backend.Services
             }
             return ServiceResponse<UserEntity>.Ok(userEntity);
         }
+
+        public async Task UpdateCategoryStatsAsync(Guid userId, string audience, List<UsedQuestion> answeredQuestions)
+        {
+            var userResponse = await GetUserEntityAsync(userId);
+            if (!userResponse.Success || userResponse.Data == null) return;
+
+            var allStats = userResponse.Data.CategoryStats ?? [];
+
+            //Hämta eller skapa audience nivån
+
+            if (!allStats.TryGetValue(audience, out var audienceStats))
+                audienceStats = [];
+
+            foreach (var group in answeredQuestions.GroupBy(q => q.Category))
+            {
+                if (!audienceStats.TryGetValue(group.Key, out var stat))
+                    stat = new CategoryStat();
+
+                stat.RecentAnswers.AddRange(group.Select(q => q.AnsweredCorrectly));
+                if (stat.RecentAnswers.Count > 50)
+                    stat.RecentAnswers = stat.RecentAnswers.TakeLast(50).ToList();
+
+                stat.Percent = stat.RecentAnswers.Count == 0 ? 0 : (int)Math.Round((double)stat.RecentAnswers.Count(a => a) / stat.RecentAnswers.Count * 100);
+
+                audienceStats[group.Key] = stat;
+            }
+
+            allStats[audience] = audienceStats;
+
+            await repo.UpdateCategoryStatsAsync(userId, allStats);
+        }
     }
 }
