@@ -338,13 +338,18 @@ namespace V_Quiz_Tests.ServiceTests
             {
                 Id = Guid.NewGuid(),
                 TargetQuestionCount = 5,
+                Player = new SessionUser
+                {
+                    UserId = null, // Ingen inloggad användare = UpdateCategoryStats triggas inte
+                    Audience = "General"
+                },
                 UsedQuestions =
                 [
                     new() { QuestionId = "q1" },
-                    new() { QuestionId = "q2" },
-                    new() { QuestionId = "q3" },
-                    new() { QuestionId = "q4" },
-                ]
+            new() { QuestionId = "q2" },
+            new() { QuestionId = "q3" },
+            new() { QuestionId = "q4" },
+        ]
             };
 
             UsedQuestion question = new();
@@ -356,10 +361,47 @@ namespace V_Quiz_Tests.ServiceTests
 
             // Assert
             SessionRepoMock.Verify(r =>
-            r.AppendUsedQuestionAsync(
-                session.Id,
-                question, true
-            ), Times.Once);
+                r.AppendUsedQuestionAsync(
+                    session.Id,
+                    question, true
+                ), Times.Once);
+        }
+        [Fact]
+        public async Task AppendAnsweredQuestionAsync_WhenLastQuestion_AndUserLoggedIn_UpdatesCategoryStats()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+            Session session = new()
+            {
+                Id = Guid.NewGuid(),
+                TargetQuestionCount = 5,
+                Player = new SessionUser
+                {
+                    UserId = userId,
+                    Audience = "General"
+                },
+                UsedQuestions =
+                [
+                    new() { QuestionId = "q1", Category = "Historia" },
+            new() { QuestionId = "q2", Category = "Historia" },
+            new() { QuestionId = "q3", Category = "Historia" },
+            new() { QuestionId = "q4", Category = "Historia" },
+        ]
+            };
+
+            UsedQuestion question = new() { QuestionId = "q5", Category = "Historia" };
+
+            var service = new SessionService(SessionRepoMock.Object, UserServiceMock.Object);
+
+            // Act
+            await service.AppendAnsweredQuestionAsync(session, question);
+
+            // Assert
+            SessionRepoMock.Verify(r =>
+                r.AppendUsedQuestionAsync(session.Id, question, true), Times.Once);
+
+            UserServiceMock.Verify(u =>
+                u.UpdateCategoryStatsAsync(userId, "General", It.IsAny<List<UsedQuestion>>()), Times.Once);
         }
         [Fact]
         public async Task AppendAnsweredQuestionAsync_WhenNotLastQuestion_SetsEndSessionFalse()
