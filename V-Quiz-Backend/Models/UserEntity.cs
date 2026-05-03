@@ -21,6 +21,8 @@ namespace V_Quiz_Backend.Models
         [BsonElement("quizProfile")]
         public QuizProfile QuizProfile { get; set; } = new();
 
+        public Dictionary<string, Dictionary<string, CategoryStat>> CategoryStats { get; set; } = [];
+
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

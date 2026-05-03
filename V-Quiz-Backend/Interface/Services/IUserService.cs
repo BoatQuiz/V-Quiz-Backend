@@ -12,5 +12,6 @@ namespace V_Quiz_Backend.Interface.Services
         Task<ServiceResponse<SessionUser>> GetSessionUserAsync(Guid userId);
         Task<ServiceResponse> UpdateQuizProfileAsync(Guid? userId, QuizProfileDto profile);
         Task<ServiceResponse<UserEntity>> GetUserEntityAsync(Guid userId);
+        Task UpdateCategoryStatsAsync(Guid userId, string audience, List<UsedQuestion> answeredQuestions);
     }
 }
