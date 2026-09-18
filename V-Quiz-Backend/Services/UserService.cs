@@ -146,10 +146,23 @@ namespace V_Quiz_Backend.Services
                     stat = new CategoryStat();
 
                 stat.RecentAnswers.AddRange(group.Select(q => q.AnsweredCorrectly));
-                if (stat.RecentAnswers.Count > 50)
-                    stat.RecentAnswers = stat.RecentAnswers.TakeLast(50).ToList();
+                if (stat.RecentAnswers.Count > 20)
+                    stat.RecentAnswers = stat.RecentAnswers.TakeLast(20).ToList();
 
                 stat.Percent = stat.RecentAnswers.Count == 0 ? 0 : (int)Math.Round((double)stat.RecentAnswers.Count(a => a) / stat.RecentAnswers.Count * 100);
+
+                // NYTT: bestäm om nivån ska ändras
+                if (stat.RecentAnswers.Count >= 10)
+                {
+                    if (stat.Percent >= 75 && stat.Level != CategoryLevel.Hard)
+                    {
+                        stat.Level = stat.Level + 1;
+                    }
+                    else if (stat.Percent <= 40 && stat.Level != CategoryLevel.Easy)
+                    {
+                        stat.Level = stat.Level - 1;
+                    }
+                }
 
                 audienceStats[group.Key] = stat;
             }
@@ -157,6 +170,8 @@ namespace V_Quiz_Backend.Services
             allStats[audience] = audienceStats;
 
             await repo.UpdateCategoryStatsAsync(userId, allStats);
-        }
+}
+    
+
     }
 }
