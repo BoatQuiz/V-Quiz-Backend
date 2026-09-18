@@ -4,5 +4,6 @@
     {
         public List <bool> RecentAnswers { get; set; } = [];
         public int Percent { get; set; }
+        public CategoryLevel Level { get; set; } = CategoryLevel.Easy;
     }
 }
