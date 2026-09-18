@@ -391,5 +391,87 @@ namespace V_Quiz_Tests.ServiceTests
             Assert.True(result.Success);
             Assert.Equal("QuizProfile updated", result.Message);
         }
+
+    [Fact]
+public async Task UpdateCategoryStatsAsync_LevelsUp_WhenPercentIs75OrMoreAndEnoughAnswers()
+{
+    // Arrange
+    var userId = Guid.NewGuid();
+    var user = new UserEntity
+    {
+        UserId = userId,
+        CategoryStats = new Dictionary<string, Dictionary<string, CategoryStat>>()
+    };
+
+    UserRepoMock
+        .Setup(repo => repo.GetUserByIdAsync(userId))
+        .ReturnsAsync(user);
+
+    // 8 av 10 rätt = 80%, ska trigga en level up (Easy -> Medium)
+    var answers = new List<UsedQuestion>
+    {
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+        new() { Category = "Geografi", AnsweredCorrectly = false },
+        new() { Category = "Geografi", AnsweredCorrectly = false },
+    };
+
+    var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+
+    // Act
+    await service.UpdateCategoryStatsAsync(userId, "General", answers);
+
+    // Assert
+    UserRepoMock.Verify(repo => repo.UpdateCategoryStatsAsync(
+        userId,
+        It.Is<Dictionary<string, Dictionary<string, CategoryStat>>>(
+            stats => stats["General"]["Geografi"].Level == CategoryLevel.Medium
+                  && stats["General"]["Geografi"].Percent == 80
+        )
+    ), Times.Once);
+}
+
+[Fact]
+public async Task UpdateCategoryStatsAsync_DoesNotChangeLevel_WhenFewerThan10Answers()
+{
+    // Arrange
+    var userId = Guid.NewGuid();
+    var user = new UserEntity
+    {
+        UserId = userId,
+        CategoryStats = new Dictionary<string, Dictionary<string, CategoryStat>>()
+    };
+
+    UserRepoMock
+        .Setup(repo => repo.GetUserByIdAsync(userId))
+        .ReturnsAsync(user);
+
+    // Bara 3 svar, alla rätt (100%) — men för få för att ändra nivå
+    var answers = new List<UsedQuestion>
+    {
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+        new() { Category = "Geografi", AnsweredCorrectly = true },
+    };
+
+    var service = new UserService(UserRepoMock.Object, PasswordHasherMock.Object);
+
+    // Act
+    await service.UpdateCategoryStatsAsync(userId, "General", answers);
+
+    // Assert — ska fortfarande vara Easy (startvärdet), trots 100%
+    UserRepoMock.Verify(repo => repo.UpdateCategoryStatsAsync(
+        userId,
+        It.Is<Dictionary<string, Dictionary<string, CategoryStat>>>(
+            stats => stats["General"]["Geografi"].Level == CategoryLevel.Easy
+        )
+    ), Times.Once);
+}
     }
 }
