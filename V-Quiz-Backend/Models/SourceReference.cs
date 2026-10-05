@@ -2,21 +2,29 @@
 
 namespace V_Quiz_Backend.Models
 {
+    [BsonIgnoreExtraElements]
     public class SourceReference
     {
-        [BsonElement("source")]
-        public string Source { get; set; } = string.Empty;
+        [BsonElement("document")]
+        public string? Document { get; set; }
+
+        [BsonElement("revNo")]
+        public int? RevNo { get; set; }
+
+        [BsonElement("revDate")]
+        public string? RevDate { get; set; }
+
+        [BsonElement("pages")]
+        public SourcePages? Pages { get; set; }
+    }
+
+    [BsonIgnoreExtraElements]
+    public class SourcePages
+    {
+        [BsonElement("pdf")]
+        public int? Pdf { get; set; }
 
         [BsonElement("chapter")]
-        public string? Chapter { get; set; }
-
-        [BsonElement("section")]
-        public string? Section { get; set; }
-
-        [BsonElement("title")]
-        public string? Title { get; set; }
-
-        [BsonElement("page")]
-        public int? Page { get; set; }
+        public int? Chapter { get; set; }
     }
 }
