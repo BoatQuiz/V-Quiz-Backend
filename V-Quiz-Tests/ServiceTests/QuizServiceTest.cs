@@ -510,7 +510,12 @@ namespace V_Quiz_Tests.ServiceTests
                     new AudienceMetaDto
                     {
 
-                    Name = "Shipping", Categories = ["Language"]
+                    Name = "Shipping", Categories = [new CategoryMetaDto
+                        {
+                            Name = "Language",
+                            Count = 5,
+                            Subcategories = new List<SubcategoryMetaDto>()
+                        }]
                     }
                 }
             };
