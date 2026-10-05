@@ -70,22 +70,51 @@ namespace V_Quiz_Backend.Services
         public async Task<ServiceResponse<QuizMetaDataDto>> GetQuizMetaDataAsync()
         {
             var rawData = await _repo.GetQuizMetaDataAsync();
-            
+
             var audiences = rawData
                 .GroupBy(q => q.Audience)
-                .Select(g => new AudienceMetaDto
+                .Select(a => new AudienceMetaDto
                 {
-                    Name = g.Key,
-                    Categories = g
-                    .Select(q => q.Category)
-                    .Distinct()
-                    .OrderBy(c => c)
-                    .ToList()
+                    Name = a.Key,
+                    Categories = a
+                        .GroupBy(q => q.Category)
+                        .Select(c => new CategoryMetaDto
+                        {
+                            Name = c.Key,
+                            Count = c.Count(),
+                            Subcategories = c
+                                .SelectMany(q => (q.Subcategory ?? [])
+                                    .Select(sub => new { Sub = sub, q.Topic }))
+                                .GroupBy(x => x.Sub)
+                                .Select(s => new SubcategoryMetaDto
+                                {
+                                    Name = s.Key,
+                                    Count = s.Count(),
+                                    Topics = s
+                                        .Where(x => !string.IsNullOrEmpty(x.Topic))
+                                        .GroupBy(x => x.Topic!)
+                                        .Select(t => new TopicMetaDto
+                                        {
+                                            Name = t.Key,
+                                            Count = t.Count()
+                                        })
+                                        .OrderBy(t => t.Name)
+                                        .ToList()
+                                })
+                                .OrderBy(s => s.Name)
+                                .ToList()
+                        })
+                        .OrderBy(c => c.Name)
+                        .ToList()
                 })
                 .OrderBy(a => a.Name)
                 .ToList();
 
-            return new ServiceResponse<QuizMetaDataDto> { Data = new QuizMetaDataDto { Audiences = audiences }, Success = true };
+            return new ServiceResponse<QuizMetaDataDto> 
+            { 
+                Data = new QuizMetaDataDto { Audiences = audiences }, 
+                Success = true 
+            };
         }
     }
 }

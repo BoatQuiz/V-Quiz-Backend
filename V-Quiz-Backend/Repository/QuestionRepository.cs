@@ -72,7 +72,9 @@ namespace V_Quiz_Backend.Repository
                 .Project(q => new QuizMetadataProjection
                 {
                     Audience = q.Audience,
-                    Category = q.Category
+                    Category = q.Category,
+                    Subcategory = q.Subcategory,
+                    Topic = q.Topic
                 })
                 .ToListAsync();
         }
