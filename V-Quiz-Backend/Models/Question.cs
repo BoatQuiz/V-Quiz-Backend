@@ -52,5 +52,8 @@ namespace V_Quiz_Backend.Models
         [BsonElement("updatedAt")]
         public DateTime UpdatedAt { get; set; }
 
+        [BsonElement("topic")]
+        public string? Topic { get; set; }
+
     }
 }
