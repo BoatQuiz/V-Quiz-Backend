@@ -12,5 +12,8 @@ namespace V_Quiz_Backend.Models
 
         [BsonElement("categories")]
         public List<string>? Categories { get; set; } = [];
+
+        [BsonElement("selection")]
+        public List<CategorySelection> Selection { get; set; } = [];
     }
 }

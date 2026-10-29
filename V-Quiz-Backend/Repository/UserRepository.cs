@@ -23,7 +23,8 @@ namespace V_Quiz_Backend.Repository
                 .Project(user => new QuizProfile
                 {
                     Audience = user.QuizProfile.Audience,
-                    Categories = user.QuizProfile.Categories
+                    Categories = user.QuizProfile.Categories,
+                    Selection = user.QuizProfile.Selection
                 })
                 .FirstOrDefaultAsync();
         }
@@ -43,7 +44,8 @@ namespace V_Quiz_Backend.Repository
                 {
                     UserId = user.UserId,
                     Audience = user.QuizProfile.Audience,
-                    Categories = user.QuizProfile.Categories
+                    Categories = user.QuizProfile.Categories,
+                    Selection = user.QuizProfile.Selection
                 })
                 .FirstOrDefaultAsync();
         }

@@ -8,5 +8,7 @@ namespace V_Quiz_Backend.Models
         public string Audience { get; set; } = "General";
         [BsonElement("categories")]
         public List<string> Categories { get; set; } = [];
+        [BsonElement("selection")]
+        public List<CategorySelection> Selection { get; set; } = [];
     }
 }

@@ -4,6 +4,7 @@
     {
         public IEnumerable<string> ExcludedQuestionIds { get; set; } = [];
         public IEnumerable<string>? AllowedCategories { get; set; }
+        public List<CategorySelection>? Selection { get; set; }
         public int? Difficulty { get; set; }
         public string Audience { get; set; } = null!;
     }

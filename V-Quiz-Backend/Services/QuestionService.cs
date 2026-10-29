@@ -28,6 +28,7 @@ namespace V_Quiz_Backend.Services
             {
                 ExcludedQuestionIds = session.UsedQuestions.Select(q => q.QuestionId),
                 AllowedCategories = session.Player.Categories,
+                Selection = session.Player.Selection,
                 Difficulty = null,
                 Audience = session.Player.Audience
             };

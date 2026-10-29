@@ -28,6 +28,7 @@ namespace V_Quiz_Backend.Services
                     UserId = userId,
                     Audience = quizProfileResponse.Data.Audience ?? "General",
                     Categories = quizProfileResponse.Data.Categories,
+                    Selection = quizProfileResponse.Data.Selection ?? [],
                 },
                 StartedAtUtc = DateTime.UtcNow,
 

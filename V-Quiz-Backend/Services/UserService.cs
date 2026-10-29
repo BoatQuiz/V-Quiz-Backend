@@ -110,7 +110,11 @@ namespace V_Quiz_Backend.Services
             {
                 return ServiceResponse.Fail("Could not find user");
             }
-            user.Data.QuizProfile.Categories = profile.Categories;
+            user.Data.QuizProfile.Selection = profile.Selection ?? [];
+            // Categories hålls i synk med trädet så att statistik m.m. fungerar som förut
+            user.Data.QuizProfile.Categories = profile.Selection?.Count > 0
+                ? profile.Selection.Select(c => c.Name).ToList()
+                : profile.Categories;
             user.Data.QuizProfile.Audience = profile.Audience;
             user.Data.UpdatedAt = DateTime.UtcNow;
 

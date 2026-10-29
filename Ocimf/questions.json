@@ -1,0 +1,272 @@
+[
+  {
+    "questionId": "CT-TC-001",
+    "category": "Cargo & Tanker Operations",
+    "subcategory": ["tank_cleaning"],
+    "difficulty": 1,
+    "audience": "Shipping",
+    "rank": ["oow"],
+    "text": "Before starting tank cleaning, why is it important to verify that tanks are properly ventilated?",
+    "options": [
+      "To ensure a safe atmosphere and reduce gas concentration",
+      "To improve cleaning efficiency",
+      "To reduce cleaning time",
+      "To maintain cargo temperature"
+    ],
+    "correctIndex": 0,
+    "isActive": true,
+    "version": 1,
+    "source": {
+      "chapter": "Tank Cleaning",
+      "section": "Preparation",
+      "title": "Ventilation",
+      "page": 0,
+      "source": "Tanker Practice"
+    },
+    "createdAt": "2026-01-21T12:00:00Z",
+    "updatedAt": "2026-01-21T12:00:00Z"
+  },
+  {
+    "questionId": "CT-TC-002",
+    "category": "Cargo & Tanker Operations",
+    "subcategory": ["tank_cleaning"],
+    "difficulty": 1,
+    "audience": "Shipping",
+    "rank": ["oow"],
+    "text": "You are preparing for tank cleaning and notice that gas readings are higher than expected. What should you do?",
+    "options": [
+      "Delay cleaning until gas levels are within safe limits",
+      "Start cleaning and monitor gas levels closely",
+      "Increase cleaning pressure to remove vapors faster",
+      "Ignore if ventilation is running"
+    ],
+    "correctIndex": 0,
+    "isActive": true,
+    "version": 1,
+    "source": {
+      "chapter": "Tank Cleaning",
+      "section": "Safety",
+      "title": "Gas Monitoring",
+      "page": 0,
+      "source": "SIRE Practice"
+    },
+    "createdAt": "2026-01-21T12:00:00Z",
+    "updatedAt": "2026-01-21T12:00:00Z"
+  },
+  {
+    "questionId": "CT-TC-003",
+    "category": "Cargo & Tanker Operations",
+    "subcategory": ["tank_cleaning"],
+    "difficulty": 1,
+    "audience": "Shipping",
+    "rank": ["oow"],
+    "text": "During tank cleaning, you notice uneven spray patterns from the cleaning machine. What is your most appropriate action?",
+    "options": [
+      "Stop or pause cleaning and investigate the cause",
+      "Continue cleaning and monitor the tank condition",
+      "Increase pressure to improve spray coverage",
+      "Wait until the cycle is complete"
+    ],
+    "correctIndex": 0,
+    "isActive": true,
+    "version": 1,
+    "source": {
+      "chapter": "Tank Cleaning",
+      "section": "Equipment",
+      "title": "Cleaning Machines",
+      "page": 0,
+      "source": "SIRE Practice"
+    },
+    "createdAt": "2026-01-21T12:00:00Z",
+    "updatedAt": "2026-01-21T12:00:00Z"
+  },
+  {
+    "questionId": "CT-TC-004",
+    "category": "Cargo & Tanker Operations",
+    "subcategory": ["tank_cleaning"],
+    "difficulty": 1,
+    "audience": "Shipping",
+    "rank": ["oow"],
+    "text": "Why is it important to monitor tank atmosphere continuously during tank cleaning?",
+    "options": [
+      "To detect unsafe gas levels and maintain safe conditions",
+      "To improve cleaning efficiency",
+      "To reduce cleaning duration",
+      "To maintain tank pressure"
+    ],
+    "correctIndex": 0,
+    "isActive": true,
+    "version": 1,
+    "source": {
+      "chapter": "Tank Cleaning",
+      "section": "Safety",
+      "title": "Atmosphere Monitoring",
+      "page": 0,
+      "source": "Tanker Practice"
+    },
+    "createdAt": "2026-01-21T12:00:00Z",
+    "updatedAt": "2026-01-21T12:00:00Z"
+  },
+  {
+    "questionId": "CT-TC-005",
+    "category": "Cargo & Tanker Operations",
+    "subcategory": ["tank_cleaning"],
+    "difficulty": 1,
+    "audience": "Shipping",
+    "rank": ["oow"],
+    "text": "You observe that tank washing water is not draining properly during cleaning. What should you do?",
+    "options": [
+      "Investigate the drainage system and be ready to stop cleaning",
+      "Continue cleaning and monitor the water level",
+      "Increase washing pressure to improve drainage",
+      "Wait until cleaning is complete"
+    ],
+    "correctIndex": 0,
+    "isActive": true,
+    "version": 1,
+    "source": {
+      "chapter": "Tank Cleaning",
+      "section": "Operations",
+      "title": "Drainage",
+      "page": 0,
+      "source": "SIRE Practice"
+    },
+    "createdAt": "2026-01-21T12:00:00Z",
+    "updatedAt": "2026-01-21T12:00:00Z"
+  },
+  {
+    "questionId": "CT-TC-006",
+    "category": "Cargo & Tanker Operations",
+    "subcategory": ["tank_cleaning"],
+    "difficulty": 1,
+    "audience": "Shipping",
+    "rank": ["oow"],
+    "text": "Before tank entry after cleaning, what is the most important check?",
+    "options": [
+      "Verify that the atmosphere is safe for entry",
+      "Confirm that cleaning is complete",
+      "Check that equipment is removed",
+      "Ensure lighting is available"
+    ],
+    "correctIndex": 0,
+    "isActive": true,
+    "version": 1,
+    "source": {
+      "chapter": "Tank Cleaning",
+      "section": "Entry",
+      "title": "Safety Checks",
+      "page": 0,
+      "source": "SIRE Practice"
+    },
+    "createdAt": "2026-01-21T12:00:00Z",
+    "updatedAt": "2026-01-21T12:00:00Z"
+  },
+  {
+    "questionId": "CT-TC-007",
+    "category": "Cargo & Tanker Operations",
+    "subcategory": ["tank_cleaning"],
+    "difficulty": 1,
+    "audience": "Shipping",
+    "rank": ["oow"],
+    "text": "During tank cleaning, ventilation stops unexpectedly. What is your most appropriate action?",
+    "options": [
+      "Stop cleaning operations until ventilation is restored",
+      "Continue cleaning while monitoring gas levels",
+      "Increase washing pressure to compensate",
+      "Wait for ventilation to restart automatically"
+    ],
+    "correctIndex": 0,
+    "isActive": true,
+    "version": 1,
+    "source": {
+      "chapter": "Tank Cleaning",
+      "section": "Safety",
+      "title": "Ventilation Failure",
+      "page": 0,
+      "source": "SIRE Practice"
+    },
+    "createdAt": "2026-01-21T12:00:00Z",
+    "updatedAt": "2026-01-21T12:00:00Z"
+  },
+  {
+    "questionId": "CT-TC-008",
+    "category": "Cargo & Tanker Operations",
+    "subcategory": ["tank_cleaning"],
+    "difficulty": 1,
+    "audience": "Shipping",
+    "rank": ["oow"],
+    "text": "Why should tank cleaning machines be checked before use?",
+    "options": [
+      "To ensure proper operation and effective cleaning",
+      "To reduce cleaning time",
+      "To maintain tank pressure",
+      "To improve cargo quality"
+    ],
+    "correctIndex": 0,
+    "isActive": true,
+    "version": 1,
+    "source": {
+      "chapter": "Tank Cleaning",
+      "section": "Equipment",
+      "title": "Pre-Checks",
+      "page": 0,
+      "source": "Tanker Practice"
+    },
+    "createdAt": "2026-01-21T12:00:00Z",
+    "updatedAt": "2026-01-21T12:00:00Z"
+  },
+  {
+    "questionId": "CT-TC-009",
+    "category": "Cargo & Tanker Operations",
+    "subcategory": ["tank_cleaning"],
+    "difficulty": 1,
+    "audience": "Shipping",
+    "rank": ["oow"],
+    "text": "You notice a strong odor from a tank after cleaning is completed. What is your most appropriate action?",
+    "options": [
+      "Continue ventilation and verify atmosphere before any entry",
+      "Assume cleaning is sufficient and proceed",
+      "Close the tank and ignore the odor",
+      "Start cargo operations immediately"
+    ],
+    "correctIndex": 0,
+    "isActive": true,
+    "version": 1,
+    "source": {
+      "chapter": "Tank Cleaning",
+      "section": "Post-Cleaning",
+      "title": "Atmosphere",
+      "page": 0,
+      "source": "SIRE Practice"
+    },
+    "createdAt": "2026-01-21T12:00:00Z",
+    "updatedAt": "2026-01-21T12:00:00Z"
+  },
+  {
+    "questionId": "CT-TC-010",
+    "category": "Cargo & Tanker Operations",
+    "subcategory": ["tank_cleaning"],
+    "difficulty": 1,
+    "audience": "Shipping",
+    "rank": ["oow"],
+    "text": "Why is it important to follow a planned sequence during tank cleaning?",
+    "options": [
+      "To ensure effective cleaning and avoid missed areas",
+      "To reduce crew workload",
+      "To speed up the cleaning process",
+      "To minimize water usage only"
+    ],
+    "correctIndex": 0,
+    "isActive": true,
+    "version": 1,
+    "source": {
+      "chapter": "Tank Cleaning",
+      "section": "Planning",
+      "title": "Cleaning Sequence",
+      "page": 0,
+      "source": "Tanker Practice"
+    },
+    "createdAt": "2026-01-21T12:00:00Z",
+    "updatedAt": "2026-01-21T12:00:00Z"
+  }
+]
